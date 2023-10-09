@@ -1,1 +1,3 @@
-export * from 'react-ga4';
+import GoogleAnalytics from './google-analytics';
+
+export default GoogleAnalytics;
