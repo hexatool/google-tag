@@ -1,14 +1,19 @@
 import assertGoogleTagMeasurementId from './assert/assert-google-tag-measurement-id';
 import loadGoogleTagManager from './fn/load-google-tag';
-import type { GoogleTagMeasurementId } from './types';
+import gtag from './google-tag';
+import type { GoogleTagArguments, GoogleTagMeasurementId } from './types';
 
 interface GoogleAnalyticsOptions {
 	measurementId?: GoogleTagMeasurementId | GoogleTagMeasurementId[];
+	testMode?: boolean;
 }
 
 class GoogleAnalytics {
+	#initialize: boolean;
+	readonly #isQueuing: boolean;
 	readonly #measurementId: Set<GoogleTagMeasurementId>;
-	readonly #testMode: boolean = false;
+	readonly #queueGtag: GoogleTagArguments[];
+	readonly #testMode: boolean;
 
 	constructor(...measurementIds: GoogleTagMeasurementId[]);
 	constructor(options: GoogleAnalyticsOptions);
@@ -18,10 +23,15 @@ class GoogleAnalytics {
 		}
 		const [first, ...rest] = args;
 		this.#measurementId = new Set();
+		this.#queueGtag = [];
+		this.#testMode = false;
+		this.#isQueuing = false;
+		this.#initialize = false;
 		if (typeof first === 'string') {
 			this.addMeasurementId(first, ...rest);
 		} else if (typeof first === 'object') {
-			const { measurementId } = first;
+			const { measurementId, testMode = false } = first;
+			this.#testMode = testMode;
 			if (typeof measurementId === 'string') {
 				this.addMeasurementId(measurementId);
 			} else if (Array.isArray(measurementId)) {
@@ -47,8 +57,19 @@ class GoogleAnalytics {
 		}
 	}
 
+	gtag(...args: GoogleTagArguments): void {
+		if (!this.#initialize) {
+			throw new Error('Google Analytics is not initialized.');
+		}
+		if (this.#testMode || this.#isQueuing) {
+			this.#queueGtag.push(args);
+		} else {
+			gtag(...args);
+		}
+	}
+
 	initialize(googleTagUrl?: string, nonce?: string): void {
-		if (this.#testMode) {
+		if (this.#initialize) {
 			return;
 		}
 		const defaultMeasurementId = this.defaultMeasurementId;
@@ -56,6 +77,7 @@ class GoogleAnalytics {
 			throw new Error('No Google Analytics Measurement ID provided.');
 		}
 		loadGoogleTagManager(defaultMeasurementId, googleTagUrl, nonce);
+		this.#initialize = true;
 	}
 }
 

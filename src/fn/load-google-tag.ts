@@ -19,4 +19,14 @@ export default function loadGoogleTagManager(
 		script.setAttribute('nonce', nonce);
 	}
 	document.body.appendChild(script);
+
+	if (!('dataLayer' in window) || typeof window.dataLayer === 'undefined') {
+		window.dataLayer = [];
+	}
+
+	if (!('gtag' in window) || typeof window.gtag === 'undefined') {
+		window.gtag = function gtag(...args: unknown[]) {
+			window.dataLayer.push(args);
+		};
+	}
 }
