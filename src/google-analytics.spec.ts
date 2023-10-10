@@ -124,9 +124,26 @@ describe('@hexatool/google-analytics', () => {
 
 			// When
 			ga.gtag('event', 'test');
+			ga.gtag(
+				'event',
+				'test',
+				{
+					foo: 'bar',
+				},
+				'value'
+			);
 
 			// Then
 			expect(gtag).toHaveBeenNthCalledWith(1, 'event', 'test');
+			expect(gtag).toHaveBeenNthCalledWith(
+				2,
+				'event',
+				'test',
+				{
+					foo: 'bar',
+				},
+				'value'
+			);
 			const exist = document.getElementById('google-tag-manager') as HTMLScriptElement;
 			expect(exist).not.toBeNull();
 		});
@@ -160,6 +177,38 @@ describe('@hexatool/google-analytics', () => {
 			expect(gtag).not.toHaveBeenCalled();
 			const exist = document.getElementById('google-tag-manager') as HTMLScriptElement;
 			expect(exist).toBeNull();
+		});
+		it('gtag(...args: GoogleTagArguments) queue', () => {
+			// Given
+			ga = new GoogleAnalytics({
+				testMode: true,
+				measurementId: GA_MEASUREMENT_ID,
+			});
+			ga.initialize();
+
+			// When
+			ga.gtag('event', 'test1');
+			ga.gtag('event', 'test2');
+
+			// Then
+			expect(gtag).not.toHaveBeenCalled();
+			const exist = document.getElementById('google-tag-manager') as HTMLScriptElement;
+			expect(exist).not.toBeNull();
+
+			// When
+			ga.setTestMode(false);
+
+			// Then
+			expect(gtag).toHaveBeenNthCalledWith(1, 'event', 'test1');
+			expect(gtag).toHaveBeenNthCalledWith(2, 'event', 'test2');
+
+			// When
+			ga.gtag('event', 'test3');
+			ga.gtag('event', 'test4');
+
+			// Then
+			expect(gtag).toHaveBeenNthCalledWith(3, 'event', 'test3');
+			expect(gtag).toHaveBeenNthCalledWith(4, 'event', 'test4');
 		});
 	});
 });

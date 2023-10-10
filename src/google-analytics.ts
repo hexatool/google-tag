@@ -13,7 +13,7 @@ class GoogleAnalytics {
 	readonly #isQueuing: boolean;
 	readonly #measurementId: Set<GoogleTagMeasurementId>;
 	readonly #queueGtag: GoogleTagArguments[];
-	readonly #testMode: boolean;
+	#testMode: boolean;
 
 	constructor(...measurementIds: GoogleTagMeasurementId[]);
 	constructor(options: GoogleAnalyticsOptions);
@@ -49,6 +49,10 @@ class GoogleAnalytics {
 		return Array.from(this.#measurementId);
 	}
 
+	get #someQueued(): boolean {
+		return this.#queueGtag.length > 0;
+	}
+
 	addMeasurementId(...measurementId: GoogleTagMeasurementId[]): void {
 		for (const id of measurementId) {
 			if (assertGoogleTagMeasurementId(id)) {
@@ -64,6 +68,9 @@ class GoogleAnalytics {
 		if (this.#testMode || this.#isQueuing) {
 			this.#queueGtag.push(args);
 		} else {
+			if (this.#someQueued) {
+				this.#flushQueue();
+			}
 			gtag(...args);
 		}
 	}
@@ -78,6 +85,31 @@ class GoogleAnalytics {
 		}
 		loadGoogleTagManager(defaultMeasurementId, googleTagUrl, nonce);
 		this.#initialize = true;
+	}
+
+	setTestMode(testMode: boolean): void {
+		this.#testMode = testMode;
+		this.#flushQueue();
+	}
+
+	#flushQueue(): void {
+		if (this.#isQueuing) {
+			return;
+		}
+		if (this.#testMode) {
+			return;
+		}
+
+		if (!this.#someQueued) {
+			return;
+		}
+
+		while (this.#queueGtag.length > 0) {
+			const args = this.#queueGtag.shift();
+			if (args) {
+				gtag(...args);
+			}
+		}
 	}
 }
 
