@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import GoogleAnalytics from './google-analytics';
 import gtag from './google-tag';
-import type { GoogleAnalyticsCommonOptions, GoogleAnalyticsEvent } from './types';
+import type { GoogleAnalyticsCommonOptions } from './types';
 
 const newDate = new Date('2020-01-01');
 vi.mock('./google-tag');
@@ -110,14 +110,64 @@ describe('@hexatool/google-analytics', () => {
 	});
 
 	describe('ga()', () => {
-		it('ga() send pageview', () => {
+		it(`ga('send', 'pageview')`, () => {
 			// Given
-			const command = 'send' as const;
-			const object = { hitType: 'pageview' } as const;
 			ga = new GoogleAnalytics(GA_MEASUREMENT_ID);
 
 			// When
-			ga.ga(command, object);
+			ga.ga('send', 'pageview');
+
+			// Then
+			expect(gtag).toHaveBeenNthCalledWith(3, 'event', 'page_view');
+		});
+		it(`ga('send', 'pageview', '/location-pathname')`, () => {
+			// Given
+			ga = new GoogleAnalytics(GA_MEASUREMENT_ID);
+
+			// When
+			ga.ga('send', 'pageview', '/location-pathname');
+
+			// Then
+			expect(gtag).toHaveBeenNthCalledWith(3, 'event', 'page_view', {
+				page_path: '/location-pathname',
+			});
+		});
+		it(`ga('send', 'pageview', '/location-pathname', object) with path`, () => {
+			// Given
+			ga = new GoogleAnalytics(GA_MEASUREMENT_ID);
+
+			// When
+			ga.ga('send', 'pageview', '/location-pathname', { title: 'title value' });
+
+			// Then
+			expect(gtag).toHaveBeenNthCalledWith(3, 'event', 'page_view', {
+				page_path: '/location-pathname',
+				page_title: 'title value',
+			});
+		});
+		it(`ga('send', 'timing', timingCategory, timingVar, timingValue)`, () => {
+			// Given
+			const timingCategory = 'DOM';
+			const timingVariable = 'first-contentful-paint';
+			const timingValue = 120;
+			ga = new GoogleAnalytics(GA_MEASUREMENT_ID);
+
+			// When
+			ga.ga('send', 'timing', timingCategory, timingVariable, timingValue);
+
+			// Then
+			expect(gtag).toHaveBeenNthCalledWith(3, 'event', 'timing_complete', {
+				event_category: timingCategory,
+				name: timingVariable,
+				value: timingValue,
+			});
+		});
+		it(`ga({ hitType: 'pageview' })`, () => {
+			// Given
+			ga = new GoogleAnalytics(GA_MEASUREMENT_ID);
+
+			// When
+			ga.ga('send', { hitType: 'pageview' });
 
 			// Then
 			expect(gtag).toHaveBeenNthCalledWith(3, 'event', 'page_view');
@@ -125,34 +175,31 @@ describe('@hexatool/google-analytics', () => {
 	});
 
 	describe('event()', () => {
-		it('event() custom events', () => {
+		it(`event('screen_view', object)`, () => {
 			// Given
-			const eventName = 'screen_view';
-			const eventParams = {
-				app_name: 'myAppName',
-				screen_name: 'Home',
-			};
 			ga = new GoogleAnalytics(GA_MEASUREMENT_ID);
 
 			// When
-			ga.event(eventName, eventParams);
+			ga.event('screen_view', { app_name: 'myAppName', screen_name: 'Home' });
 
 			// Then
-			expect(gtag).toHaveBeenNthCalledWith(3, 'event', eventName, eventParams);
+			expect(gtag).toHaveBeenNthCalledWith(3, 'event', 'screen_view', {
+				app_name: 'myAppName',
+				screen_name: 'Home',
+			});
 		});
 
-		it('event() simple', () => {
+		it('event(object)', () => {
 			// Given
-			const object: GoogleAnalyticsEvent = {
+			ga = new GoogleAnalytics(GA_MEASUREMENT_ID);
+
+			// When
+			ga.event({
 				category: 'category value',
 				action: 'action value',
 				label: 'label value',
 				nonInteraction: true,
-			};
-			ga = new GoogleAnalytics(GA_MEASUREMENT_ID);
-
-			// When
-			ga.event(object);
+			});
 
 			// Then
 			expect(gtag).toHaveBeenNthCalledWith(3, 'event', 'action value', {
@@ -163,20 +210,127 @@ describe('@hexatool/google-analytics', () => {
 		});
 	});
 
-	describe('set()', () => {
-		it('set()', () => {
+	describe('send()', () => {
+		it(`send('pageview')`, () => {
 			// Given
-			const object = {
+			ga = new GoogleAnalytics(GA_MEASUREMENT_ID);
+
+			// When
+			ga.send('pageview');
+
+			// Then
+			expect(gtag).toHaveBeenNthCalledWith(3, 'event', 'page_view');
+		});
+		it('send(object)', () => {
+			// Given
+			ga = new GoogleAnalytics(GA_MEASUREMENT_ID);
+
+			// When
+			ga.send({ hitType: 'pageview' });
+
+			// Then
+			expect(gtag).toHaveBeenNthCalledWith(3, 'event', 'page_view');
+		});
+		it('send(object) web vitals', () => {
+			// Given
+			ga = new GoogleAnalytics(GA_MEASUREMENT_ID);
+
+			// https://github.com/GoogleChrome/web-vitals/blob/main/README.md
+			function sendToGoogleAnalytics({
+				name,
+				delta,
+				value,
+				id,
+			}: {
+				delta: number;
+				id: string;
+				name: string;
+				value: number;
+			}) {
+				ga.send({
+					hitType: 'event',
+					eventCategory: 'Web Vitals',
+					eventAction: name,
+					eventLabel: id,
+					nonInteraction: true,
+					// Use `delta` so the value can be summed.
+					value: Math.round(name === 'CLS' ? delta * 1000 : delta),
+					// Needed to aggregate events.
+					metric_id: id,
+					// Optional.
+					metric_value: value,
+					// Optional.
+					metric_delta: delta,
+
+					/*
+					 * OPTIONAL: any additional params or debug info here.
+					 * See: https://web.dev/debug-web-vitals-in-the-field/
+					 * metric_rating: 'good' | 'ni' | 'poor',
+					 * debug_info: '...',
+					 * ...
+					 */
+				});
+			}
+
+			// When
+			sendToGoogleAnalytics({
+				name: 'CLS',
+				delta: 12.34,
+				value: 1,
+				id: 'v2-1632380328370-6426221164013',
+			});
+
+			// Then
+			expect(gtag).toHaveBeenNthCalledWith(3, 'event', 'CLS', {
+				event_category: 'Web Vitals',
+				event_label: 'v2-1632380328370-6426221164013',
+				metric_delta: 12.34,
+				metric_id: 'v2-1632380328370-6426221164013',
+				metric_value: 1,
+				non_interaction: true,
+				value: 12340,
+			});
+		});
+		it('send(object) with path', () => {
+			// Given
+			ga = new GoogleAnalytics(GA_MEASUREMENT_ID);
+
+			// When
+			ga.send({ hitType: 'pageview', page: '/location-pathname' });
+
+			// Then
+			expect(gtag).toHaveBeenNthCalledWith(3, 'event', 'page_view', {
+				page_path: '/location-pathname',
+			});
+		});
+		it('send(object) with path and title', () => {
+			// Given
+			ga = new GoogleAnalytics(GA_MEASUREMENT_ID);
+
+			// When
+			ga.send({ hitType: 'pageview', page: '/location-pathname', title: 'title value' });
+
+			// Then
+			expect(gtag).toHaveBeenNthCalledWith(3, 'event', 'page_view', {
+				page_path: '/location-pathname',
+				page_title: 'title value',
+			});
+		});
+	});
+
+	describe('set()', () => {
+		it('set(object)', () => {
+			// Given
+			ga = new GoogleAnalytics(GA_MEASUREMENT_ID);
+
+			// When
+			ga.set({
 				anonymizeIp: true,
 				referrer: '/signup',
 				allowAdFeatures: 'allowAdFeatures value',
 				allowAdPersonalizationSignals: 'allowAdPersonalizationSignals value',
 				page: '/home',
-			};
-			ga = new GoogleAnalytics(GA_MEASUREMENT_ID);
-
-			// When
-			ga.set(object);
+			});
 
 			// Then
 			expect(gtag).toHaveBeenNthCalledWith(3, 'set', {

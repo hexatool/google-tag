@@ -9,7 +9,7 @@ const HIT_TYPES_ALLOWED_VALUES = [
 	'social',
 	'exception',
 	'timing',
-];
+] as const;
 
 type HitTypes = (typeof HIT_TYPES_ALLOWED_VALUES)[number];
 
@@ -18,7 +18,6 @@ interface HitTypeObject {
 }
 
 interface EventHitType extends HitTypeObject {
-	[key: string]: unknown;
 	eventAction: string;
 	eventCategory: string;
 	eventLabel?: string | undefined;
@@ -26,12 +25,16 @@ interface EventHitType extends HitTypeObject {
 	hitType: 'event';
 	nonInteraction?: boolean | undefined;
 	transport?: Transport | undefined;
+
+	[key: string]: unknown;
 }
 
 interface PageViewHitType extends HitTypeObject {
-	[key: string]: unknown;
 	hitType: 'pageview';
 	page?: string;
+	title?: string;
+
+	[key: string]: unknown;
 }
 
 interface ScreenViewHitType extends HitTypeObject {
@@ -55,7 +58,11 @@ interface ExceptionHitType extends HitTypeObject {
 }
 
 interface TimingHitType extends HitTypeObject {
+	category: string;
 	hitType: 'timing';
+	label?: string | undefined;
+	value?: number | undefined;
+	variable: string;
 }
 
 type HitType =
@@ -70,6 +77,8 @@ type HitType =
 
 type NonHitTypeObject<T extends HitType = HitType> = Omit<T, keyof HitTypeObject>;
 
-export type { EventHitType, HitType, HitTypes, NonHitTypeObject, PageViewHitType, TimingHitType };
+type NonHitTypePageView = Omit<NonHitTypeObject<PageViewHitType>, 'page'>;
+
+export type { EventHitType, HitType, HitTypes, NonHitTypeObject, NonHitTypePageView, PageViewHitType, TimingHitType };
 
 export { HIT_TYPES_ALLOWED_VALUES };

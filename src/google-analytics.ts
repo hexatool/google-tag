@@ -16,6 +16,7 @@ import type {
 	HitType,
 	HitTypes,
 	NonHitTypeObject,
+	NonHitTypePageView,
 	PageViewHitType,
 	TimingHitType,
 } from './types';
@@ -25,7 +26,7 @@ class GoogleAnalytics {
 	readonly #defaultTrackingId: string;
 	readonly #format: typeof format;
 	#isQueuing: boolean;
-	#options: GoogleAnalyticsGlobalOptions = {
+	readonly #options: GoogleAnalyticsGlobalOptions = {
 		gtagUrl: 'https://www.googletagmanager.com/gtag/js',
 		testMode: false,
 	};
@@ -104,7 +105,9 @@ class GoogleAnalytics {
 	}
 
 	event(event: GoogleAnalyticsEvent): void;
+
 	event(eventName: string, args: object): void;
+
 	event(eventOrEventName: string | GoogleAnalyticsEvent, args?: object): void {
 		if (typeof eventOrEventName === 'string') {
 			this.gtag('event', eventOrEventName, this.#toGtagOptions(args));
@@ -123,22 +126,72 @@ class GoogleAnalytics {
 	}
 
 	ga(callback: ClientIdCallBack): void;
+
 	ga(command: 'set', args: object): void;
+
 	ga(command: 'set', key: string, value: object): void;
+
 	ga(command: 'send', hitType: HitType): void;
-	ga(commandOrCallBack: CommandType | ClientIdCallBack, hitTypeOrKey?: string | object, value?: object): void {
+
+	ga(command: 'send', hitType: HitTypes): void;
+
+	ga(command: 'send', hitType: 'pageview', path: string): void;
+
+	ga(command: 'send', hitType: 'pageview', path: string, params: NonHitTypePageView): void;
+
+	ga(
+		command: 'send',
+		hitType: 'timing',
+		timingCategory: string,
+		timingVariable: string,
+		timingValue?: number,
+		timingLabel?: string
+	): void;
+
+	ga(
+		commandOrCallBack: CommandType | ClientIdCallBack,
+		hitTypeOrKey?: string | object,
+		valueOrCategory?: object | string,
+		paramsOrTimingVariable?: NonHitTypePageView | string,
+		timingValue?: number,
+		timingLabel?: string
+	): void {
 		if (typeof commandOrCallBack === 'string') {
 			switch (commandOrCallBack) {
 				case 'send':
 					if (this.#assertHitType(hitTypeOrKey)) {
-						this.#gaCommand(commandOrCallBack, hitTypeOrKey);
+						if (
+							hitTypeOrKey === 'pageview' &&
+							typeof valueOrCategory === 'string' &&
+							paramsOrTimingVariable &&
+							typeof paramsOrTimingVariable === 'object'
+						) {
+							this.#gaCommand(commandOrCallBack, hitTypeOrKey, valueOrCategory, paramsOrTimingVariable);
+						} else if (hitTypeOrKey === 'pageview' && typeof valueOrCategory === 'string') {
+							this.#gaCommand(commandOrCallBack, hitTypeOrKey, valueOrCategory);
+						} else if (
+							hitTypeOrKey === 'timing' &&
+							typeof valueOrCategory === 'string' &&
+							typeof paramsOrTimingVariable === 'string'
+						) {
+							this.#gaCommand(
+								commandOrCallBack,
+								hitTypeOrKey,
+								valueOrCategory,
+								paramsOrTimingVariable,
+								timingValue,
+								timingLabel
+							);
+						} else {
+							this.#gaCommand(commandOrCallBack, hitTypeOrKey);
+						}
 					}
 
 					break;
 				case 'set':
 					if (typeof hitTypeOrKey === 'string') {
-						if (value) {
-							this.#gaCommand(commandOrCallBack, hitTypeOrKey, value);
+						if (valueOrCategory && typeof valueOrCategory === 'object') {
+							this.#gaCommand(commandOrCallBack, hitTypeOrKey, valueOrCategory);
 						}
 					} else if (hitTypeOrKey) {
 						this.#gaCommand(commandOrCallBack, hitTypeOrKey);
@@ -173,6 +226,10 @@ class GoogleAnalytics {
 		} else {
 			gtag(...args);
 		}
+	}
+
+	send(hitType: HitType | HitTypes): void {
+		this.#gaCommand('send', hitType);
 	}
 
 	set(args: object): void;
@@ -272,10 +329,19 @@ class GoogleAnalytics {
 		return true;
 	}
 
-	#assertHitType(hitType: unknown): hitType is EventHitType {
+	#assertHitType(hitType: unknown): hitType is EventHitType | HitTypes {
 		if (!hitType) {
 			throw new Error('`hitType` is required');
 		}
+
+		if (typeof hitType === 'string') {
+			if (HIT_TYPES_ALLOWED_VALUES.includes(hitType as HitTypes)) {
+				return true;
+			}
+			const expected = HIT_TYPES_ALLOWED_VALUES.map(a => `'${a}'`).join(', ');
+			throw new Error(`\`hitType\` must be one of ${expected}`);
+		}
+
 		if (typeof hitType !== 'object') {
 			throw new Error('`hitType` must be an object');
 		}
@@ -284,7 +350,7 @@ class GoogleAnalytics {
 			throw new Error('`hitType` is required');
 		}
 
-		if (!HIT_TYPES_ALLOWED_VALUES.includes(hitType.hitType as string)) {
+		if (!HIT_TYPES_ALLOWED_VALUES.includes(hitType.hitType as HitTypes)) {
 			const expected = HIT_TYPES_ALLOWED_VALUES.map(a => `'${a}`).join(', ');
 			throw new Error(`\`hitType\` must be equals to \`${expected}`);
 		}
@@ -292,20 +358,92 @@ class GoogleAnalytics {
 		return true;
 	}
 
+	#assertTimingHitType(hitType: unknown): hitType is NonHitTypeObject<TimingHitType> {
+		if (!hitType) {
+			throw new Error('`hitType` is required');
+		}
+		if (typeof hitType !== 'object') {
+			throw new Error('`hitType` must be an object');
+		}
+
+		if (!('category' in hitType)) {
+			throw new Error('`category` is required');
+		}
+		if (typeof hitType.category !== 'string') {
+			throw new Error('`category` must be a string');
+		}
+
+		if (!('variable' in hitType)) {
+			throw new Error('`variable` is required');
+		}
+		if (typeof hitType.variable !== 'string') {
+			throw new Error('`variable` must be a string');
+		}
+
+		if ('value' in hitType && hitType.value !== undefined && typeof hitType.value !== 'number') {
+			throw new Error('`value` must be a number');
+		}
+
+		if ('label' in hitType && hitType.label !== undefined && typeof hitType.label !== 'string') {
+			throw new Error('`label` must be a string');
+		}
+
+		return true;
+	}
+
 	#gaCommand(command: 'set', args: object): void;
 	#gaCommand(command: 'set', key: string, value: object): void;
-	#gaCommand(command: 'send', hitType: HitType): void;
-	#gaCommand(command: CommandType, hitTypeOrKey: string | object, value?: object): void {
+	#gaCommand(command: 'send', hitType: HitType | HitTypes): void;
+	#gaCommand(command: 'send', hitType: 'pageview', path: string): void;
+	#gaCommand(command: 'send', hitType: 'pageview', path: string, params: NonHitTypePageView): void;
+	#gaCommand(
+		command: 'send',
+		hitType: 'timing',
+		timingCategory: string,
+		timingVariable: string,
+		timingValue?: number,
+		timingLabel?: string
+	): void;
+
+	#gaCommand(
+		command: CommandType,
+		hitTypeOrKey: string | object,
+		valueOrCategory?: object | string,
+		paramsOrTimingVariable?: NonHitTypePageView | string,
+		timingValue?: number,
+		timingLabel?: string
+	): void {
 		switch (command) {
 			case 'send':
 				if (this.#assertHitType(hitTypeOrKey)) {
-					this.#gaCommandSend(hitTypeOrKey);
+					if (
+						hitTypeOrKey === 'pageview' &&
+						typeof valueOrCategory === 'string' &&
+						typeof paramsOrTimingVariable === 'object'
+					) {
+						this.#gaCommandSend(hitTypeOrKey, valueOrCategory, paramsOrTimingVariable);
+					} else if (hitTypeOrKey === 'pageview' && typeof valueOrCategory === 'string') {
+						this.#gaCommandSend(hitTypeOrKey, valueOrCategory);
+					} else if (
+						hitTypeOrKey === 'timing' &&
+						typeof valueOrCategory === 'string' &&
+						typeof paramsOrTimingVariable === 'string'
+					) {
+						this.#gaCommandSend(hitTypeOrKey, {
+							category: valueOrCategory,
+							variable: paramsOrTimingVariable,
+							value: timingValue,
+							label: timingLabel,
+						});
+					} else {
+						this.#gaCommandSend(hitTypeOrKey);
+					}
 				}
 				break;
 			case 'set':
 				if (typeof hitTypeOrKey === 'string') {
-					if (value) {
-						this.#gaCommandSet(hitTypeOrKey, value);
+					if (valueOrCategory && typeof valueOrCategory === 'object') {
+						this.#gaCommandSet(hitTypeOrKey, valueOrCategory);
 					}
 				} else {
 					this.#gaCommandSet(hitTypeOrKey);
@@ -315,24 +453,36 @@ class GoogleAnalytics {
 	}
 
 	#gaCommandSend(hitType: 'timing', params: NonHitTypeObject<TimingHitType>): void;
+	#gaCommandSend(hitType: 'pageview', path: string): void;
+	#gaCommandSend(hitType: 'pageview', path: string, params: NonHitTypePageView): void;
 	#gaCommandSend(hitType: 'pageview', params: NonHitTypeObject<PageViewHitType>): void;
 	#gaCommandSend(hitType: 'event', params: NonHitTypeObject<EventHitType>): void;
-	#gaCommandSend(hitType: HitType): void;
-	#gaCommandSend(...args: [HitTypes | HitType, NonHitTypeObject?]): void {
+	#gaCommandSend(hitType: HitType | HitTypes): void;
+	#gaCommandSend(...args: [HitTypes | HitType, (NonHitTypeObject | string)?, NonHitTypePageView?]): void {
 		const hitType = typeof args[0] === 'string' ? args[0] : args[0].hitType;
 		const params = typeof args[0] === 'string' ? args[1] : args[0];
-		if (!params) {
-			return;
-		}
+		const extraParams = args[2];
 
 		switch (hitType) {
 			case 'event':
+				if (!params) {
+					return;
+				}
 				this.#gaCommandSendEventParameters(hitType, params);
 				break;
 			case 'pageview':
-				this.#gaCommandSendPageViewParameters(hitType, params);
+				if (typeof params === 'string') {
+					this.#gaCommandSendPageViewParameters(hitType, params, extraParams);
+				} else {
+					this.#gaCommandSendPageViewParameters(hitType, params);
+				}
 				break;
 			case 'timing':
+				if (!params) {
+					return;
+				}
+				this.#gaCommandSendTimingParameters(params as NonHitTypeObject<TimingHitType>);
+				break;
 			case 'screenview':
 			case 'transaction':
 			case 'item':
@@ -378,7 +528,25 @@ class GoogleAnalytics {
 		}
 	}
 
-	#gaCommandSendPageView({ page, title, location, hitType: _hitType, ...rest }: NonHitTypeObject<PageViewHitType>) {
+	#gaCommandSendPageView(): void;
+
+	#gaCommandSendPageView(path: NonHitTypeObject<PageViewHitType>): void;
+
+	#gaCommandSendPageView(path: string, params?: NonHitTypePageView): void;
+
+	#gaCommandSendPageView(
+		hitType: NonHitTypeObject<PageViewHitType> | string = {},
+		pageViewParams?: NonHitTypePageView
+	) {
+		const {
+			page,
+			title,
+			location,
+			hitType: _hitType,
+			...rest
+		} = typeof hitType === 'string'
+			? ({ hitType: 'pageview', page: hitType, ...pageViewParams } as NonHitTypeObject<PageViewHitType>)
+			: hitType;
 		const params = {
 			...(page ? { page_path: page } : {}),
 			...(title ? { page_title: title } : {}),
@@ -392,19 +560,75 @@ class GoogleAnalytics {
 		}
 	}
 
-	#gaCommandSendPageViewParameters(hitType: 'pageview', params: NonHitTypeObject<PageViewHitType>): void;
+	#gaCommandSendPageViewParameters(hitType: 'pageview', path?: string): void;
+
+	#gaCommandSendPageViewParameters(hitType: 'pageview', path: string, params?: NonHitTypePageView): void;
+
+	#gaCommandSendPageViewParameters(hitType: 'pageview', params?: NonHitTypeObject<PageViewHitType>): void;
+
 	#gaCommandSendPageViewParameters(hitType: PageViewHitType): void;
+
 	#gaCommandSendPageViewParameters(
-		...args: ['pageview' | PageViewHitType, NonHitTypeObject<PageViewHitType>?]
+		hitTypeOrEvent: PageViewHitType | 'pageview',
+		hitTypeOrPath?: string | NonHitTypeObject<PageViewHitType>,
+		params?: NonHitTypePageView
 	): void {
-		const [hitTypeOrEvent, params] = args;
 		if (typeof hitTypeOrEvent === 'string') {
-			if (params) {
-				this.#gaCommandSendPageView(params);
+			if (typeof hitTypeOrPath === 'string') {
+				this.#gaCommandSendPageView(hitTypeOrPath, params);
+			} else if (hitTypeOrPath) {
+				this.#gaCommandSendPageView(hitTypeOrPath);
+			} else {
+				this.#gaCommandSendPageView();
 			}
 		} else {
 			const { hitType: _hitType, ...rest } = hitTypeOrEvent;
 			this.#gaCommandSendPageView(rest);
+		}
+	}
+
+	#gaCommandSendTiming({ variable, value, category, label }: NonHitTypeObject<TimingHitType>) {
+		this.gtag('event', 'timing_complete', {
+			name: variable,
+			value,
+			event_category: category,
+			event_label: label,
+		});
+	}
+
+	#gaCommandSendTimingParameters(params: NonHitTypeObject<TimingHitType>): void;
+
+	#gaCommandSendTimingParameters(
+		timingCategory: string,
+		timingVariable: string,
+		timingValue?: number,
+		timingLabel?: string
+	): void;
+
+	#gaCommandSendTimingParameters(
+		timingCategoryOrHitType: string | NonHitTypeObject<TimingHitType>,
+		timingVariable?: string,
+		timingValue?: number,
+		timingLabel?: string
+	) {
+		if (typeof timingCategoryOrHitType === 'string') {
+			if (typeof timingVariable !== 'string') {
+				return;
+			}
+			if (timingValue && typeof timingValue !== 'number') {
+				return;
+			}
+			if (timingLabel && typeof timingLabel !== 'string') {
+				return;
+			}
+			this.#gaCommandSendTiming({
+				category: timingCategoryOrHitType,
+				label: timingLabel,
+				value: timingValue,
+				variable: timingVariable,
+			});
+		} else if (this.#assertTimingHitType(timingCategoryOrHitType)) {
+			this.#gaCommandSendTiming(timingCategoryOrHitType);
 		}
 	}
 
