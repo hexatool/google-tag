@@ -1,11 +1,5 @@
-type CommandType = 'send' | 'set';
+type GoogleTagMeasurementId = `G-${string}`;
+type GoogleTagCommand = 'command' | 'get' | 'set' | 'event' | 'consent';
+type GoogleTagArguments = [GoogleTagCommand, ...unknown[]];
 
-type ClientIdCallBack = (clientId: string) => void;
-
-export type { ClientIdCallBack, CommandType };
-
-export * from './google-analytics.event';
-export * from './google-analytics.options';
-export * from './google-tag.options';
-export * from './hit-type';
-export * from './transport';
+export type { GoogleTagArguments, GoogleTagCommand, GoogleTagMeasurementId };

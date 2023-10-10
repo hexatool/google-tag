@@ -1,14 +1,17 @@
-const gtag = (...gtagArgs: unknown[]): void => {
-	if (typeof window !== 'undefined') {
-		if (!('gtag' in window) || typeof window.gtag === 'undefined') {
-			window.dataLayer = window.dataLayer ?? [];
-			window.gtag = function gtag(...args: unknown[]) {
-				window.dataLayer?.push(args);
-			};
-		}
+import type { GoogleTagArguments } from './types';
 
-		window.gtag(...gtagArgs);
+const gtag = (...gtagArgs: GoogleTagArguments): void => {
+	if (typeof window === 'undefined') {
+		return;
 	}
+
+	if (!('gtag' in window)) {
+		return;
+	}
+	if (typeof window.gtag !== 'function') {
+		return;
+	}
+	window.gtag(...gtagArgs);
 };
 
 export default gtag;
