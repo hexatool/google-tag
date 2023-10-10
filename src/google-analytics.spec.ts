@@ -76,6 +76,19 @@ describe('@hexatool/google-analytics', () => {
 			expect(exist).not.toBeNull();
 			expect(exist.src).toBe(`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`);
 		});
+		it('initialize() without measurement', () => {
+			// Given
+			ga = new GoogleAnalytics();
+			const fn = () => ga.initialize();
+
+			// When
+			expect(fn).toThrow(`No Google Analytics Measurement ID provided.`);
+
+			// Then
+			expect(gtag).not.toHaveBeenCalled();
+			const exist = document.getElementById('google-tag-manager') as HTMLScriptElement;
+			expect(exist).toBeNull();
+		});
 		it('initialize(googleTagUrl?: string, nonce?: string)', () => {
 			// Given
 			ga = new GoogleAnalytics(GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2);

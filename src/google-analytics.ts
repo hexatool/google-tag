@@ -20,7 +20,7 @@ class GoogleAnalytics {
 		this.#measurementId = new Set();
 		if (typeof first === 'string') {
 			this.addMeasurementId(first, ...rest);
-		} else {
+		} else if (typeof first === 'object') {
 			const { measurementId } = first;
 			if (typeof measurementId === 'string') {
 				this.addMeasurementId(measurementId);
