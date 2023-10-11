@@ -1,37 +1,41 @@
 {
-	"name": "@magnus-strategy/react-ga4",
-	"version": "2.1.0",
+	"name": "@hexatool/google-analytics",
+	"version": "0.0.0",
 	"author": "Magnus Strategy Group S.L.",
-	"description": "react-ga4 parcel",
-	"keywords": [],
-	"homepage": "https://github.com/magnus-strategy/react-ga4",
+	"description": "Google Analytics 4 library",
+	"keywords": [
+		"analytics",
+		"google",
+		"google analytics",
+		"google analytics 4",
+		"universal analytics"
+	],
+	"homepage": "https://github.com/hexatool/google-analytics",
 	"bugs": {
-		"url": "https://github.com/magnus-strategy/react-ga4/issues"
+		"url": "https://github.com/hexatool/google-analytics/issues"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git@github.com:magnus-strategy/react-ga4.git"
+		"url": "git@github.com:hexatool/google-analytics.git"
 	},
 	"license": "PRIVATE",
 	"files": [
 		"dist"
 	],
 	"type": "module",
-	"module": "./dist/magnus-strategy-react-ga4.min.mjs",
-	"umd:main": "./dist/magnus-strategy-react-ga4.umd.min.js",
+	"module": "./dist/google-analytics.mjs",
+	"umd:main": "./dist/google-analytics.umd.min.js",
 	"types": "./dist/index.d.ts",
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
-			"default": "./dist/magnus-strategy-react-ga4.min.mjs"
+			"default": "./dist/google-analytics.mjs"
 		}
 	},
 	"scripts": {
 		"build": "vite build",
 		"lint": "eslint .",
 		"lint:fix": "eslint --fix .",
-		"registry:login": "artifactregistry-auth --repo-config=./.npmrc --credential-config=./.npmrc && git update-index --assume-unchanged ./.npmrc",
-		"postpublish": "gcsdeploy",
 		"prepare": "vite build",
 		"publish": "changeset publish",
 		"typecheck": "tsc --noEmit",
@@ -41,11 +45,7 @@
 		"@changesets/cli": "2.26.2",
 		"@hexatool/eslint-config": "2.1.3",
 		"@hexatool/tsconfig": "20.0.1",
-		"@magnus-strategy/gcsdeploy": "1.0.2",
-		"@magnus-strategy/vite-plugin-format-filename": "0.0.3",
-		"@magnus-strategy/vite-plugin-format-globals": "0.0.3",
 		"eslint": "8.50.0",
-		"google-artifactregistry-auth": "3.1.2",
 		"happy-dom": "12.9.0",
 		"typescript": "5.2.2",
 		"vite": "4.4.11",
@@ -56,11 +56,5 @@
 		"node": "20.6.1",
 		"yarn": "3.6.4"
 	},
-	"packageManager": "yarn@3.6.4",
-	"gcsdeploy": {
-		"project": "magnus-strategy",
-		"bucket": "magnus-strategy-group-npm",
-		"fileFilter": ".*\\.umd\\.min\\.js$",
-		"cacheControl": "public, max-age=2592000, immutable"
-	}
+	"packageManager": "yarn@3.6.4"
 }

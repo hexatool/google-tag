@@ -1,10 +1,10 @@
-import assertMeasurementId from './assert/assert-google-tag-measurement-id';
-import loadGoogleAnalytics from './fn/load-google-tag';
+import assertMeasurementId from './assert/assert-google-analytics-measurement-id';
+import { loadGoogleAnalytics } from './fn';
 import gtag from './google-tag';
 import type {
 	GoogleAnalyticsArguments,
+	GoogleAnalyticsCustomEventArguments,
 	GoogleAnalyticsEvent,
-	GoogleAnalyticsEventArguments,
 	GoogleAnalyticsEventCommonParams,
 	GoogleAnalyticsExceptionEventArguments,
 	GoogleAnalyticsExceptionEventParams,
@@ -88,7 +88,7 @@ class GoogleAnalytics {
 	gtag(...args: GoogleAnalyticsPageViewEventArguments): void;
 	gtag(...args: GoogleAnalyticsExceptionEventArguments): void;
 	gtag(...args: GoogleAnalyticsLoginEventArguments): void;
-	gtag(...args: GoogleAnalyticsEventArguments): void;
+	gtag(...args: GoogleAnalyticsCustomEventArguments): void;
 	gtag(...args: GoogleAnalyticsArguments): void {
 		if (!this.#initialize) {
 			throw new Error('Google Analytics is not initialized.');

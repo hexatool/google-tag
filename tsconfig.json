@@ -4,6 +4,6 @@
 		"experimentalDecorators": true,
 		"lib": ["dom"]
 	},
-	"include": ["src", "env.d.ts"],
+	"include": ["src", "env.d.ts", "vite.config.ts"],
 	"exclude": ["dist", "node_modules"]
 }

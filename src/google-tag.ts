@@ -1,6 +1,6 @@
-import type { GoogleTagArguments } from './types';
+import type { GoogleAnalyticsArguments } from './types';
 
-const gtag = (...gtagArgs: GoogleTagArguments): void => {
+const gtag = (...gtagArgs: GoogleAnalyticsArguments): void => {
 	if (typeof window === 'undefined') {
 		return;
 	}
