@@ -1,8 +1,8 @@
-import type { GoogleTagMeasurementId } from '../types';
+import type { GoogleAnalyticsMeasurementId } from '../types';
 
 const regex = /^G-[A-Z0-9]{10}$/;
 
-export default function isGoogleTagMeasurementId(value: unknown): value is GoogleTagMeasurementId {
+export default function isGoogleAnalyticsMeasurementId(value: unknown): value is GoogleAnalyticsMeasurementId {
 	if (typeof value !== 'string') {
 		return false;
 	}

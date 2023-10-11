@@ -17,3 +17,5 @@
 https://developers.google.com/tag-platform/gtagjs?hl=es
 https://developers.google.com/tag-platform/gtagjs/reference?hl=es
 https://developers.google.com/analytics/devguides/collection/ga4?hl=es
+
+https://developers.google.com/analytics/devguides/collection/gtagjs?hl=es

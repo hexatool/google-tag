@@ -13,6 +13,7 @@ describe('@hexatool/google-analytics', () => {
 	let ga: GoogleAnalytics;
 	const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
 	const GA_MEASUREMENT_ID_2 = 'G-YYYYYYYYYY';
+	const GA_MEASUREMENT_ID_3 = 'G-ZZZZZZZZZZ';
 	const FAKE_GOOGLE_TAG_URL = 'https://www.example.com/gtag/js';
 	const FAKE_NONCE = 'fake-nonce';
 
@@ -116,6 +117,28 @@ describe('@hexatool/google-analytics', () => {
 		});
 	});
 
+	describe('addMeasurementId()', () => {
+		it('addMeasurementId()', () => {
+			// Given
+			ga = new GoogleAnalytics(GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2);
+
+			// Then
+			expect(ga.defaultMeasurementId).toBe(GA_MEASUREMENT_ID);
+			expect(ga.measurementIds).toStrictEqual([GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2]);
+			expect(gtag).not.toHaveBeenCalled();
+			const exist = document.getElementById('google-tag-manager') as HTMLScriptElement;
+			expect(exist).toBeNull();
+
+			// When
+			ga.addMeasurementId(GA_MEASUREMENT_ID_3);
+
+			// Then
+			expect(ga.defaultMeasurementId).toBe(GA_MEASUREMENT_ID);
+			expect(ga.measurementIds).toStrictEqual([GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2, GA_MEASUREMENT_ID_3]);
+			expect(gtag).not.toHaveBeenCalled();
+		});
+	});
+
 	describe('gtag()', () => {
 		it('gtag(...args: GoogleTagArguments)', () => {
 			// Given
@@ -124,26 +147,17 @@ describe('@hexatool/google-analytics', () => {
 
 			// When
 			ga.gtag('event', 'test');
-			ga.gtag(
-				'event',
-				'test',
-				{
-					foo: 'bar',
-				},
-				'value'
-			);
+			ga.gtag('event', 'test', {
+				foo: 'bar',
+				send_to: GA_MEASUREMENT_ID_2,
+			});
 
 			// Then
 			expect(gtag).toHaveBeenNthCalledWith(1, 'event', 'test');
-			expect(gtag).toHaveBeenNthCalledWith(
-				2,
-				'event',
-				'test',
-				{
-					foo: 'bar',
-				},
-				'value'
-			);
+			expect(gtag).toHaveBeenNthCalledWith(2, 'event', 'test', {
+				foo: 'bar',
+				send_to: GA_MEASUREMENT_ID_2,
+			});
 			const exist = document.getElementById('google-tag-manager') as HTMLScriptElement;
 			expect(exist).not.toBeNull();
 		});
@@ -209,6 +223,45 @@ describe('@hexatool/google-analytics', () => {
 			// Then
 			expect(gtag).toHaveBeenNthCalledWith(3, 'event', 'test3');
 			expect(gtag).toHaveBeenNthCalledWith(4, 'event', 'test4');
+		});
+		it('gtag(...args: GoogleTagArguments) whatever', () => {
+			// Given
+			ga = new GoogleAnalytics({
+				measurementId: GA_MEASUREMENT_ID,
+			});
+			ga.initialize();
+
+			// When
+
+			// @ts-expect-error Testing invalid arguments
+			ga.gtag([1, 2], 'event', { foo: 'bar' });
+
+			// Then
+			expect(gtag).toHaveBeenNthCalledWith(1, [1, 2], 'event', { foo: 'bar' });
+			const exist = document.getElementById('google-tag-manager') as HTMLScriptElement;
+			expect(exist).not.toBeNull();
+		});
+	});
+
+	describe('event()', () => {
+		it('event(...args: GoogleTagArguments)', () => {
+			// Given
+			ga = new GoogleAnalytics(GA_MEASUREMENT_ID);
+			ga.initialize();
+
+			// When
+			ga.event('test');
+			ga.event('test', {
+				foo: 'bar',
+			});
+
+			// Then
+			expect(gtag).toHaveBeenNthCalledWith(1, 'event', 'test');
+			expect(gtag).toHaveBeenNthCalledWith(2, 'event', 'test', {
+				foo: 'bar',
+			});
+			const exist = document.getElementById('google-tag-manager') as HTMLScriptElement;
+			expect(exist).not.toBeNull();
 		});
 	});
 });
