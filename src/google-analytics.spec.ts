@@ -74,49 +74,6 @@ describe('@hexatool/google-analytics', () => {
 		});
 	});
 
-	describe('initialize()', () => {
-		it('initialize()', () => {
-			// Given
-			ga = new GoogleAnalytics(GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2);
-
-			// When
-			ga.initialize();
-
-			// Then
-			expect(gtag).not.toHaveBeenCalled();
-			const exist = document.getElementById('google-tag-manager') as HTMLScriptElement;
-			expect(exist).not.toBeNull();
-			expect(exist.src).toBe(`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`);
-		});
-		it('initialize() without measurement', () => {
-			// Given
-			ga = new GoogleAnalytics();
-			const fn = () => ga.initialize();
-
-			// When
-			expect(fn).toThrow(`No Google Analytics Measurement ID provided.`);
-
-			// Then
-			expect(gtag).not.toHaveBeenCalled();
-			const exist = document.getElementById('google-tag-manager') as HTMLScriptElement;
-			expect(exist).toBeNull();
-		});
-		it('initialize(googleTagUrl?: string, nonce?: string)', () => {
-			// Given
-			ga = new GoogleAnalytics(GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2);
-
-			// When
-			ga.initialize(FAKE_GOOGLE_TAG_URL, FAKE_NONCE);
-
-			// Then
-			expect(gtag).not.toHaveBeenCalled();
-			const exist = document.getElementById('google-tag-manager') as HTMLScriptElement;
-			expect(exist).not.toBeNull();
-			expect(exist.src).toBe(`${FAKE_GOOGLE_TAG_URL}?id=${GA_MEASUREMENT_ID}`);
-			expect(exist.attributes.getNamedItem('nonce')?.value).toBe(FAKE_NONCE);
-		});
-	});
-
 	describe('addMeasurementId()', () => {
 		it('addMeasurementId()', () => {
 			// Given
@@ -136,6 +93,65 @@ describe('@hexatool/google-analytics', () => {
 			expect(ga.defaultMeasurementId).toBe(GA_MEASUREMENT_ID);
 			expect(ga.measurementIds).toStrictEqual([GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2, GA_MEASUREMENT_ID_3]);
 			expect(gtag).not.toHaveBeenCalled();
+		});
+	});
+
+	describe('config()', () => {
+		it('config(params: GoogleAnalyticsConfigParams)', () => {
+			// Given
+			ga = new GoogleAnalytics(GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2);
+			ga.initialize();
+
+			// When
+			ga.config({
+				groups: ['test'],
+			});
+
+			// Then
+			expect(gtag).toHaveBeenNthCalledWith(1, 'config', GA_MEASUREMENT_ID, {
+				groups: ['test'],
+			});
+			const exist = document.getElementById('google-tag-manager') as HTMLScriptElement;
+			expect(exist).not.toBeNull();
+		});
+		it('config(measurementID: GoogleAnalyticsMeasurementId, params?: GoogleAnalyticsConfigParams)', () => {
+			// Given
+			ga = new GoogleAnalytics(GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2);
+			ga.initialize();
+
+			// When
+			ga.config(GA_MEASUREMENT_ID_2, {
+				groups: ['test'],
+			});
+
+			// Then
+			expect(gtag).toHaveBeenNthCalledWith(1, 'config', GA_MEASUREMENT_ID_2, {
+				groups: ['test'],
+			});
+			const exist = document.getElementById('google-tag-manager') as HTMLScriptElement;
+			expect(exist).not.toBeNull();
+		});
+	});
+
+	describe('event()', () => {
+		it('event(...args: GoogleTagArguments)', () => {
+			// Given
+			ga = new GoogleAnalytics(GA_MEASUREMENT_ID);
+			ga.initialize();
+
+			// When
+			ga.event('test');
+			ga.event('test', {
+				foo: 'bar',
+			});
+
+			// Then
+			expect(gtag).toHaveBeenNthCalledWith(1, 'event', 'test');
+			expect(gtag).toHaveBeenNthCalledWith(2, 'event', 'test', {
+				foo: 'bar',
+			});
+			const exist = document.getElementById('google-tag-manager') as HTMLScriptElement;
+			expect(exist).not.toBeNull();
 		});
 	});
 
@@ -243,25 +259,46 @@ describe('@hexatool/google-analytics', () => {
 		});
 	});
 
-	describe('event()', () => {
-		it('event(...args: GoogleTagArguments)', () => {
+	describe('initialize()', () => {
+		it('initialize()', () => {
 			// Given
-			ga = new GoogleAnalytics(GA_MEASUREMENT_ID);
-			ga.initialize();
+			ga = new GoogleAnalytics(GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2);
 
 			// When
-			ga.event('test');
-			ga.event('test', {
-				foo: 'bar',
-			});
+			ga.initialize();
 
 			// Then
-			expect(gtag).toHaveBeenNthCalledWith(1, 'event', 'test');
-			expect(gtag).toHaveBeenNthCalledWith(2, 'event', 'test', {
-				foo: 'bar',
-			});
+			expect(gtag).not.toHaveBeenCalled();
 			const exist = document.getElementById('google-tag-manager') as HTMLScriptElement;
 			expect(exist).not.toBeNull();
+			expect(exist.src).toBe(`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`);
+		});
+		it('initialize() without measurement', () => {
+			// Given
+			ga = new GoogleAnalytics();
+			const fn = () => ga.initialize();
+
+			// When
+			expect(fn).toThrow(`No Google Analytics Measurement ID provided.`);
+
+			// Then
+			expect(gtag).not.toHaveBeenCalled();
+			const exist = document.getElementById('google-tag-manager') as HTMLScriptElement;
+			expect(exist).toBeNull();
+		});
+		it('initialize(googleTagUrl?: string, nonce?: string)', () => {
+			// Given
+			ga = new GoogleAnalytics(GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2);
+
+			// When
+			ga.initialize(FAKE_GOOGLE_TAG_URL, FAKE_NONCE);
+
+			// Then
+			expect(gtag).not.toHaveBeenCalled();
+			const exist = document.getElementById('google-tag-manager') as HTMLScriptElement;
+			expect(exist).not.toBeNull();
+			expect(exist.src).toBe(`${FAKE_GOOGLE_TAG_URL}?id=${GA_MEASUREMENT_ID}`);
+			expect(exist.attributes.getNamedItem('nonce')?.value).toBe(FAKE_NONCE);
 		});
 	});
 });

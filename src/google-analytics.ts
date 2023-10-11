@@ -3,6 +3,8 @@ import { loadGoogleAnalytics } from './fn';
 import gtag from './google-tag';
 import type {
 	GoogleAnalyticsArguments,
+	GoogleAnalyticsConfigArguments,
+	GoogleAnalyticsConfigParams,
 	GoogleAnalyticsCustomEventArguments,
 	GoogleAnalyticsEvent,
 	GoogleAnalyticsEventCommonParams,
@@ -73,6 +75,19 @@ class GoogleAnalytics {
 		}
 	}
 
+	config(params: GoogleAnalyticsConfigParams): void;
+	config(measurementID: GoogleAnalyticsMeasurementId, params?: GoogleAnalyticsConfigParams): void;
+	config(
+		measurementIdOrParams: GoogleAnalyticsMeasurementId | GoogleAnalyticsConfigParams,
+		params?: GoogleAnalyticsConfigParams
+	): void {
+		if (typeof measurementIdOrParams === 'string') {
+			this.gtag('config', measurementIdOrParams, params);
+		} else if (this.defaultMeasurementId && typeof measurementIdOrParams === 'object') {
+			this.gtag('config', this.defaultMeasurementId, measurementIdOrParams);
+		}
+	}
+
 	event(event: 'login', params?: GoogleAnalyticsLoginEventParams): void;
 	event(event: 'exception', params?: GoogleAnalyticsExceptionEventParams): void;
 	event(event: 'page_view', params?: GoogleAnalyticsPageViewEventParams): void;
@@ -89,6 +104,7 @@ class GoogleAnalytics {
 	gtag(...args: GoogleAnalyticsExceptionEventArguments): void;
 	gtag(...args: GoogleAnalyticsLoginEventArguments): void;
 	gtag(...args: GoogleAnalyticsCustomEventArguments): void;
+	gtag(...args: GoogleAnalyticsConfigArguments): void;
 	gtag(...args: GoogleAnalyticsArguments): void {
 		if (!this.#initialize) {
 			throw new Error('Google Analytics is not initialized.');
