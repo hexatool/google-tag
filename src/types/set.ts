@@ -1,7 +1,7 @@
 import type { GoogleAnalyticsMeasurementId } from './measurement-id';
-import type { GoogleAnalyticsParamsPrimitives } from './params';
+import type { GoogleAnalyticsCommonParams } from './params';
 
-type GoogleAnalyticsSetParams = Record<string, GoogleAnalyticsParamsPrimitives>;
+type GoogleAnalyticsSetParams = GoogleAnalyticsCommonParams;
 
 type GoogleAnalyticsSetArguments = ['set', GoogleAnalyticsMeasurementId, GoogleAnalyticsSetParams];
 

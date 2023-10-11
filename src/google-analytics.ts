@@ -22,7 +22,6 @@ import type {
 	GoogleAnalyticsSetArguments,
 	GoogleAnalyticsSetParams,
 } from './types';
-import type { GoogleAnalyticsConsentArguments, GoogleAnalyticsConsentParams } from './types/consent';
 
 interface GoogleAnalyticsOptions {
 	measurementId?: GoogleAnalyticsMeasurementId | GoogleAnalyticsMeasurementId[];
