@@ -134,6 +134,28 @@ describe('@hexatool/google-analytics', () => {
 		});
 	});
 
+	describe('consent()', () => {
+		it('consent(params: GoogleAnalyticsConsentParams)', () => {
+			// Given
+			ga = new GoogleAnalytics(GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2);
+			ga.initialize();
+
+			// When
+			ga.consent({
+				ad_storage: 'denied',
+				wait_for_update: 1000,
+			});
+
+			// Then
+			expect(gtag).toHaveBeenNthCalledWith(1, 'consent', {
+				ad_storage: 'denied',
+				wait_for_update: 1000,
+			});
+			const exist = document.getElementById('google-tag-manager') as HTMLScriptElement;
+			expect(exist).not.toBeNull();
+		});
+	});
+
 	describe('event()', () => {
 		it('event(...args: GoogleTagArguments)', () => {
 			// Given

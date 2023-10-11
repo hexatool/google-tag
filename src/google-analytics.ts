@@ -20,6 +20,7 @@ import type {
 	GoogleAnalyticsSetArguments,
 	GoogleAnalyticsSetParams,
 } from './types';
+import type { GoogleAnalyticsConsentArguments, GoogleAnalyticsConsentParams } from './types/consent';
 
 interface GoogleAnalyticsOptions {
 	measurementId?: GoogleAnalyticsMeasurementId | GoogleAnalyticsMeasurementId[];
@@ -92,6 +93,10 @@ class GoogleAnalytics {
 		}
 	}
 
+	consent(params: GoogleAnalyticsConsentParams): void {
+		this.gtag('consent', params);
+	}
+
 	event(event: 'login', params?: GoogleAnalyticsLoginEventParams): void;
 	event(event: 'exception', params?: GoogleAnalyticsExceptionEventParams): void;
 	event(event: 'page_view', params?: GoogleAnalyticsPageViewEventParams): void;
@@ -129,6 +134,7 @@ class GoogleAnalytics {
 	gtag(...args: GoogleAnalyticsConfigArguments): void;
 	gtag(...args: GoogleAnalyticsGetArguments): void;
 	gtag(...args: GoogleAnalyticsSetArguments): void;
+	gtag(...args: GoogleAnalyticsConsentArguments): void;
 	gtag(...args: GoogleAnalyticsArguments): void {
 		if (!this.#initialize) {
 			throw new Error('Google Analytics is not initialized.');
