@@ -17,6 +17,8 @@ import type {
 	GoogleAnalyticsMeasurementId,
 	GoogleAnalyticsPageViewEventArguments,
 	GoogleAnalyticsPageViewEventParams,
+	GoogleAnalyticsSetArguments,
+	GoogleAnalyticsSetParams,
 } from './types';
 
 interface GoogleAnalyticsOptions {
@@ -126,6 +128,7 @@ class GoogleAnalytics {
 	gtag(...args: GoogleAnalyticsCustomEventArguments): void;
 	gtag(...args: GoogleAnalyticsConfigArguments): void;
 	gtag(...args: GoogleAnalyticsGetArguments): void;
+	gtag(...args: GoogleAnalyticsSetArguments): void;
 	gtag(...args: GoogleAnalyticsArguments): void {
 		if (!this.#initialize) {
 			throw new Error('Google Analytics is not initialized.');
@@ -150,6 +153,19 @@ class GoogleAnalytics {
 		}
 		loadGoogleAnalytics(defaultMeasurementId, googleTagUrl, nonce);
 		this.#initialize = true;
+	}
+
+	set(params: GoogleAnalyticsSetParams): void;
+	set(measurementID: GoogleAnalyticsMeasurementId, params: GoogleAnalyticsSetParams): void;
+	set(
+		measurementIdOrParams: GoogleAnalyticsMeasurementId | GoogleAnalyticsSetParams,
+		params?: GoogleAnalyticsSetParams
+	): void {
+		if (typeof measurementIdOrParams === 'string' && params) {
+			this.gtag('set', measurementIdOrParams, params);
+		} else if (this.defaultMeasurementId && typeof measurementIdOrParams === 'object') {
+			this.gtag('set', this.defaultMeasurementId, measurementIdOrParams);
+		}
 	}
 
 	setTestMode(testMode: boolean): void {

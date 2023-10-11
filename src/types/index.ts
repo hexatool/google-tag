@@ -6,8 +6,10 @@ import type {
 	GoogleAnalyticsPageViewEventArguments,
 } from './event';
 import type { GoogleAnalyticsGetArguments } from './get';
+import type { GoogleAnalyticsSetArguments } from './set';
 
 export type GoogleAnalyticsArguments =
+	| GoogleAnalyticsSetArguments
 	| GoogleAnalyticsGetArguments
 	| GoogleAnalyticsConfigArguments
 	| GoogleAnalyticsCustomEventArguments
@@ -22,3 +24,4 @@ export * from './event';
 export * from './get';
 export * from './measurement-id';
 export * from './params';
+export * from './set';

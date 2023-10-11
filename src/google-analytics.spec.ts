@@ -337,4 +337,45 @@ describe('@hexatool/google-analytics', () => {
 			expect(exist.attributes.getNamedItem('nonce')?.value).toBe(FAKE_NONCE);
 		});
 	});
+
+	describe('set()', () => {
+		it('config(params: GoogleAnalyticsSetParams)', () => {
+			// Given
+			ga = new GoogleAnalytics(GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2);
+			ga.initialize();
+
+			// When
+			ga.set({
+				country: 'US',
+				currency: 'USD',
+			});
+
+			// Then
+			expect(gtag).toHaveBeenNthCalledWith(1, 'set', GA_MEASUREMENT_ID, {
+				country: 'US',
+				currency: 'USD',
+			});
+			const exist = document.getElementById('google-tag-manager') as HTMLScriptElement;
+			expect(exist).not.toBeNull();
+		});
+		it('config(measurementID: GoogleAnalyticsMeasurementId, params: GoogleAnalyticsSetParams)', () => {
+			// Given
+			ga = new GoogleAnalytics(GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2);
+			ga.initialize();
+
+			// When
+			ga.set(GA_MEASUREMENT_ID_2, {
+				country: 'US',
+				currency: 'USD',
+			});
+
+			// Then
+			expect(gtag).toHaveBeenNthCalledWith(1, 'set', GA_MEASUREMENT_ID_2, {
+				country: 'US',
+				currency: 'USD',
+			});
+			const exist = document.getElementById('google-tag-manager') as HTMLScriptElement;
+			expect(exist).not.toBeNull();
+		});
+	});
 });
