@@ -23,15 +23,9 @@
 		"dist"
 	],
 	"type": "module",
-	"module": "./dist/google-analytics.mjs",
+	"module": "./dist/google-analytics.min.mjs",
 	"umd:main": "./dist/google-analytics.umd.min.js",
 	"types": "./dist/index.d.ts",
-	"exports": {
-		".": {
-			"types": "./dist/index.d.ts",
-			"default": "./dist/google-analytics.mjs"
-		}
-	},
 	"scripts": {
 		"build": "vite build",
 		"lint": "eslint .",
