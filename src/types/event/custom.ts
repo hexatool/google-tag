@@ -1,4 +1,4 @@
-import type { GoogleAnalyticsEventArgumentsTyped } from './arguments';
+import type { GoogleAnalyticsArgumentsTyped } from '../arguments';
 import type { GoogleAnalyticsEventCommonParams } from './params';
 
 interface GoogleAnalyticsCustomEventParams extends GoogleAnalyticsEventCommonParams {
@@ -7,7 +7,7 @@ interface GoogleAnalyticsCustomEventParams extends GoogleAnalyticsEventCommonPar
 	value?: number;
 }
 
-type GoogleAnalyticsCustomEventArguments = GoogleAnalyticsEventArgumentsTyped<
+type GoogleAnalyticsCustomEventArguments = GoogleAnalyticsArgumentsTyped<
 	'event',
 	string,
 	GoogleAnalyticsCustomEventParams

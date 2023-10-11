@@ -1,11 +1,11 @@
-import type { GoogleAnalyticsEventArgumentsTyped } from './arguments';
+import type { GoogleAnalyticsArgumentsTyped } from '../arguments';
 import type { GoogleAnalyticsEventCommonParams } from './params';
 
 interface GoogleAnalyticsLoginEventParams extends GoogleAnalyticsEventCommonParams {
 	method?: string;
 }
 
-type GoogleAnalyticsLoginEventArguments = GoogleAnalyticsEventArgumentsTyped<
+type GoogleAnalyticsLoginEventArguments = GoogleAnalyticsArgumentsTyped<
 	'event',
 	'login',
 	GoogleAnalyticsLoginEventParams

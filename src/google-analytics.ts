@@ -1,5 +1,5 @@
 import assertMeasurementId from './assert/assert-google-analytics-measurement-id';
-import { loadGoogleAnalytics } from './fn';
+import { isGoogleAnalyticsMeasurementId, loadGoogleAnalytics } from './fn';
 import gtag from './google-tag';
 import type {
 	GoogleAnalyticsArguments,
@@ -10,6 +10,8 @@ import type {
 	GoogleAnalyticsEventCommonParams,
 	GoogleAnalyticsExceptionEventArguments,
 	GoogleAnalyticsExceptionEventParams,
+	GoogleAnalyticsGetArguments,
+	GoogleAnalyticsGetCallback,
 	GoogleAnalyticsLoginEventArguments,
 	GoogleAnalyticsLoginEventParams,
 	GoogleAnalyticsMeasurementId,
@@ -100,11 +102,30 @@ class GoogleAnalytics {
 		}
 	}
 
+	get(field: string, callback: GoogleAnalyticsGetCallback): void;
+	get(measurementID: GoogleAnalyticsMeasurementId, field: string, callback: GoogleAnalyticsGetCallback): void;
+	get(
+		fieldOrMeasurementID: string,
+		fieldOrCallBack: string | GoogleAnalyticsGetCallback,
+		callback?: GoogleAnalyticsGetCallback
+	): void {
+		if (isGoogleAnalyticsMeasurementId(fieldOrMeasurementID) && typeof fieldOrCallBack === 'string' && callback) {
+			this.gtag('get', fieldOrMeasurementID, fieldOrCallBack, callback);
+		} else if (
+			this.defaultMeasurementId &&
+			typeof fieldOrMeasurementID === 'string' &&
+			typeof fieldOrCallBack === 'function'
+		) {
+			this.gtag('get', this.defaultMeasurementId, fieldOrMeasurementID, fieldOrCallBack);
+		}
+	}
+
 	gtag(...args: GoogleAnalyticsPageViewEventArguments): void;
 	gtag(...args: GoogleAnalyticsExceptionEventArguments): void;
 	gtag(...args: GoogleAnalyticsLoginEventArguments): void;
 	gtag(...args: GoogleAnalyticsCustomEventArguments): void;
 	gtag(...args: GoogleAnalyticsConfigArguments): void;
+	gtag(...args: GoogleAnalyticsGetArguments): void;
 	gtag(...args: GoogleAnalyticsArguments): void {
 		if (!this.#initialize) {
 			throw new Error('Google Analytics is not initialized.');

@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import GoogleAnalytics from './google-analytics';
 import gtag from './google-tag';
+import type { GoogleAnalyticsParamsPrimitives } from './types';
 
 const newDate = new Date('2020-01-01');
 vi.mock('./google-tag');
@@ -150,6 +151,41 @@ describe('@hexatool/google-analytics', () => {
 			expect(gtag).toHaveBeenNthCalledWith(2, 'event', 'test', {
 				foo: 'bar',
 			});
+			const exist = document.getElementById('google-tag-manager') as HTMLScriptElement;
+			expect(exist).not.toBeNull();
+		});
+	});
+
+	describe('get()', () => {
+		it('get(field: string, callback: GoogleAnalyticsGetCallback)', () => {
+			// Given
+			ga = new GoogleAnalytics(GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2);
+			ga.initialize();
+			const callback = (_result?: GoogleAnalyticsParamsPrimitives) => {
+				// Callback
+			};
+
+			// When
+			ga.get('test', callback);
+
+			// Then
+			expect(gtag).toHaveBeenNthCalledWith(1, 'get', GA_MEASUREMENT_ID, 'test', callback);
+			const exist = document.getElementById('google-tag-manager') as HTMLScriptElement;
+			expect(exist).not.toBeNull();
+		});
+		it('get(measurementID: GoogleAnalyticsMeasurementId, field: string, callback: GoogleAnalyticsGetCallback)', () => {
+			// Given
+			ga = new GoogleAnalytics(GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2);
+			ga.initialize();
+			const callback = (_result?: GoogleAnalyticsParamsPrimitives) => {
+				// Callback
+			};
+
+			// When
+			ga.get(GA_MEASUREMENT_ID_2, 'test', callback);
+
+			// Then
+			expect(gtag).toHaveBeenNthCalledWith(1, 'get', GA_MEASUREMENT_ID_2, 'test', callback);
 			const exist = document.getElementById('google-tag-manager') as HTMLScriptElement;
 			expect(exist).not.toBeNull();
 		});

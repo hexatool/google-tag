@@ -1,4 +1,4 @@
-import type { GoogleAnalyticsEventArgumentsTyped } from './arguments';
+import type { GoogleAnalyticsArgumentsTyped } from '../arguments';
 import type { GoogleAnalyticsEventCommonParams } from './params';
 
 interface GoogleAnalyticsExceptionEventParams extends GoogleAnalyticsEventCommonParams {
@@ -6,7 +6,7 @@ interface GoogleAnalyticsExceptionEventParams extends GoogleAnalyticsEventCommon
 	fatal?: boolean;
 }
 
-type GoogleAnalyticsExceptionEventArguments = GoogleAnalyticsEventArgumentsTyped<
+type GoogleAnalyticsExceptionEventArguments = GoogleAnalyticsArgumentsTyped<
 	'event',
 	'exception',
 	GoogleAnalyticsExceptionEventParams

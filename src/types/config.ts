@@ -1,4 +1,4 @@
-import type { GoogleAnalyticsEventArgumentsTyped } from './event';
+import type { GoogleAnalyticsArgumentsTyped } from './arguments';
 import type { GoogleAnalyticsMeasurementId } from './measurement-id';
 
 interface GoogleAnalyticsConfigParams {
@@ -6,7 +6,7 @@ interface GoogleAnalyticsConfigParams {
 	send_page_view?: boolean;
 }
 
-type GoogleAnalyticsConfigArguments = GoogleAnalyticsEventArgumentsTyped<
+type GoogleAnalyticsConfigArguments = GoogleAnalyticsArgumentsTyped<
 	'config',
 	GoogleAnalyticsMeasurementId,
 	GoogleAnalyticsConfigParams

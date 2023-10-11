@@ -1,4 +1,3 @@
-export * from './arguments';
 export * from './custom';
 export * from './event';
 export * from './exception';

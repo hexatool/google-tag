@@ -1,4 +1,4 @@
-import type { GoogleAnalyticsEventArgumentsTyped } from './arguments';
+import type { GoogleAnalyticsArgumentsTyped } from '../arguments';
 import type { GoogleAnalyticsEventCommonParams } from './params';
 
 interface GoogleAnalyticsPageViewEventParams extends GoogleAnalyticsEventCommonParams {
@@ -10,7 +10,7 @@ interface GoogleAnalyticsPageViewEventParams extends GoogleAnalyticsEventCommonP
 	user_agent?: string;
 }
 
-type GoogleAnalyticsPageViewEventArguments = GoogleAnalyticsEventArgumentsTyped<
+type GoogleAnalyticsPageViewEventArguments = GoogleAnalyticsArgumentsTyped<
 	'event',
 	'page_view',
 	GoogleAnalyticsPageViewEventParams
