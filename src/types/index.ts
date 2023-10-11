@@ -22,6 +22,7 @@ export type GoogleAnalyticsArguments =
 export * from './arguments';
 export * from './command';
 export * from './config';
+export * from './consent';
 export * from './event';
 export * from './get';
 export * from './measurement-id';

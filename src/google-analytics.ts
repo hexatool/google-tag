@@ -5,6 +5,8 @@ import type {
 	GoogleAnalyticsArguments,
 	GoogleAnalyticsConfigArguments,
 	GoogleAnalyticsConfigParams,
+	GoogleAnalyticsConsentArguments,
+	GoogleAnalyticsConsentParams,
 	GoogleAnalyticsCustomEventArguments,
 	GoogleAnalyticsEvent,
 	GoogleAnalyticsEventCommonParams,
