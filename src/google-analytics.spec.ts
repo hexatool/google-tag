@@ -430,6 +430,44 @@ describe('@hexatool/google-analytics', () => {
 			expect(window.dataLayer).toBeDefined();
 			expect(window.dataLayer.length).toBe(3);
 		});
+		it('initialize() with allowAdPersonalizationSignals', () => {
+			// Given
+			ga = new GoogleAnalytics({
+				measurementId: [
+					GA_MEASUREMENT_ID,
+					{
+						measurementId: GA_MEASUREMENT_ID_2,
+						user_id: '1',
+						send_page_view: false,
+					},
+				],
+				allowAdPersonalizationSignals: false,
+			});
+
+			// When
+			ga.initialize();
+
+			// Then
+			expectArg(['set', 'allow_ad_personalization_signals', false]);
+			expectArg(['js', newDate], 1);
+			expectArg(['config', GA_MEASUREMENT_ID], 2);
+			expectArg(
+				[
+					'config',
+					GA_MEASUREMENT_ID_2,
+					{
+						user_id: '1',
+						send_page_view: false,
+					},
+				],
+				3
+			);
+			const exist = document.getElementById('google-tag-manager') as HTMLScriptElement;
+			expect(exist).not.toBeNull();
+			expect(exist.src).toBe(`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`);
+			expect(window.dataLayer).toBeDefined();
+			expect(window.dataLayer.length).toBe(4);
+		});
 		it('initialize() without measurement', () => {
 			// Given
 			ga = new GoogleAnalytics();

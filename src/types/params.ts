@@ -1,14 +1,16 @@
 import type { GoogleAnalyticsMeasurementId } from './measurement-id';
 
-type GoogleAnalyticsParamsPrimitives = string | number | boolean;
+type GoogleAnalyticsParamsPrimitives = string | number | boolean | undefined | null;
 type GoogleAnalyticsParamsPrimitivesWithCallback = GoogleAnalyticsParamsPrimitives | ((...args: unknown[]) => void);
 
-type GoogleAnalyticsParams = Record<
+type GoogleAnalyticsParams = Record<string, GoogleAnalyticsParamsPrimitives | GoogleAnalyticsParamsPrimitives[]>;
+
+type GoogleAnalyticsParamsWithCallback = Record<
 	string,
 	GoogleAnalyticsParamsPrimitivesWithCallback | GoogleAnalyticsParamsPrimitivesWithCallback[]
 >;
 
-interface GoogleAnalyticsCommonParams extends GoogleAnalyticsParams {
+interface GoogleAnalyticsCommonParams extends GoogleAnalyticsParamsWithCallback {
 	event_callback?: () => void;
 	event_timeout?: number;
 	groups?: string | string[];
@@ -20,4 +22,5 @@ export type {
 	GoogleAnalyticsParams,
 	GoogleAnalyticsParamsPrimitives,
 	GoogleAnalyticsParamsPrimitivesWithCallback,
+	GoogleAnalyticsParamsWithCallback,
 };

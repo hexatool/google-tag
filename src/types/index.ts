@@ -8,11 +8,12 @@ import type {
 } from './event';
 import type { GoogleAnalyticsGetArguments } from './get';
 import type { GoogleAnalyticsJsArguments } from './js';
-import type { GoogleAnalyticsSetArguments } from './set';
+import type { GoogleAnalyticsSetArguments, GoogleAnalyticsSetMeasurementIdArguments } from './set';
 
 export type GoogleAnalyticsArguments =
 	| GoogleAnalyticsJsArguments
 	| GoogleAnalyticsSetArguments
+	| GoogleAnalyticsSetMeasurementIdArguments
 	| GoogleAnalyticsConsentArguments
 	| GoogleAnalyticsGetArguments
 	| GoogleAnalyticsConfigArguments
@@ -27,6 +28,7 @@ export * from './config';
 export * from './consent';
 export * from './event';
 export * from './get';
+export * from './initialize';
 export * from './js';
 export * from './measurement-id';
 export * from './params';

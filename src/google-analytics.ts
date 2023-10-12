@@ -21,15 +21,17 @@ import type {
 	GoogleAnalyticsPageViewEventArguments,
 	GoogleAnalyticsPageViewEventParams,
 	GoogleAnalyticsSetArguments,
+	GoogleAnalyticsSetMeasurementIdArguments,
 	GoogleAnalyticsSetParams,
+	InitializeOptions,
 } from './types';
-import type { InitializeOptions } from './types/initialize';
 
 interface GoogleAnalyticsConfigParamsWithMeasurementId extends GoogleAnalyticsConfigParams {
 	measurementId: GoogleAnalyticsMeasurementId;
 }
 
 interface GoogleAnalyticsOptions {
+	allowAdPersonalizationSignals?: false;
 	measurementId?:
 		| GoogleAnalyticsMeasurementId
 		| GoogleAnalyticsConfigParamsWithMeasurementId
@@ -38,6 +40,7 @@ interface GoogleAnalyticsOptions {
 }
 
 class GoogleAnalytics {
+	readonly #allowAdPersonalizationSignals?: false;
 	#initialize: boolean;
 	readonly #isQueuing: boolean;
 	readonly #measurementId: Map<GoogleAnalyticsMeasurementId, GoogleAnalyticsConfigParams>;
@@ -59,8 +62,11 @@ class GoogleAnalytics {
 		if (typeof first === 'string') {
 			this.addMeasurementId(first, ...rest);
 		} else if (typeof first === 'object') {
-			const { measurementId, testMode = false } = first;
+			const { allowAdPersonalizationSignals, measurementId, testMode = false } = first;
 			this.#testMode = testMode;
+			if (allowAdPersonalizationSignals === false) {
+				this.#allowAdPersonalizationSignals = allowAdPersonalizationSignals;
+			}
 			if (typeof measurementId === 'string') {
 				this.addMeasurementId(measurementId);
 			} else if (Array.isArray(measurementId)) {
@@ -158,6 +164,7 @@ class GoogleAnalytics {
 	gtag(...args: GoogleAnalyticsConfigArguments): void;
 	gtag(...args: GoogleAnalyticsGetArguments): void;
 	gtag(...args: GoogleAnalyticsSetArguments): void;
+	gtag(...args: GoogleAnalyticsSetMeasurementIdArguments): void;
 	gtag(...args: GoogleAnalyticsConsentArguments): void;
 	gtag(...args: GoogleAnalyticsArguments): void {
 		if (!this.#initialize) {
@@ -183,6 +190,9 @@ class GoogleAnalytics {
 		}
 		loadGoogleAnalytics(defaultMeasurementId, googleTagUrl, nonce, layer);
 		this.#initialize = true;
+		if (this.#allowAdPersonalizationSignals === false) {
+			this.gtag('set', 'allow_ad_personalization_signals', false);
+		}
 		this.gtag('js', new Date());
 		this.#measurementId.forEach((params, measurementId) => {
 			this.config(measurementId, params);
