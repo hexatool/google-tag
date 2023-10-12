@@ -18,7 +18,7 @@
 		"type": "git",
 		"url": "git@github.com:hexatool/google-analytics.git"
 	},
-	"license": "PRIVATE",
+	"license": "MIT",
 	"files": [
 		"dist"
 	],
