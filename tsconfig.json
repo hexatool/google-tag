@@ -1,7 +1,9 @@
 {
 	"extends": "@hexatool/tsconfig",
 	"compilerOptions": {
-		"experimentalDecorators": true
+		"experimentalDecorators": true,
+		"lib": ["dom", "es2022"]
 	},
+	"include": ["src", "env.d.ts", "vite.config.ts"],
 	"exclude": ["dist", "node_modules"]
 }
