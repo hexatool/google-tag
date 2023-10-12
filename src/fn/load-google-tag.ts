@@ -19,7 +19,7 @@ export default function loadGoogleAnalytics(
 	if (nonce) {
 		script.setAttribute('nonce', nonce);
 	}
-	document.body.appendChild(script);
+	document.head.appendChild(script);
 
 	// @ts-expect-error Custom dataLayer
 	if (!(layer in window) || typeof window[layer] === 'undefined') {
