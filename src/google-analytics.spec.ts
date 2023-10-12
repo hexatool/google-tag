@@ -94,12 +94,18 @@ describe('@hexatool/google-analytics', () => {
 		it('new GoogleAnalytics(options: GoogleAnalyticsOptions)', () => {
 			// When
 			ga = new GoogleAnalytics({
-				measurementId: [GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2],
+				measurementId: [
+					{
+						measurementId: GA_MEASUREMENT_ID_3,
+					},
+					GA_MEASUREMENT_ID,
+					GA_MEASUREMENT_ID_2,
+				],
 			});
 
 			// Then
-			expect(ga.defaultMeasurementId).toBe(GA_MEASUREMENT_ID);
-			expect(ga.measurementIds).toStrictEqual([GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2]);
+			expect(ga.defaultMeasurementId).toBe(GA_MEASUREMENT_ID_3);
+			expect(ga.measurementIds).toStrictEqual([GA_MEASUREMENT_ID_3, GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2]);
 			expectNotInit();
 		});
 	});

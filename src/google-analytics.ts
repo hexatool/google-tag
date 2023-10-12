@@ -24,15 +24,22 @@ import type {
 } from './types';
 import type { InitializeOptions } from './types/initialize';
 
+interface GoogleAnalyticsConfigParamsWithMeasurementId extends GoogleAnalyticsConfigParams {
+	measurementId: GoogleAnalyticsMeasurementId;
+}
+
 interface GoogleAnalyticsOptions {
-	measurementId?: GoogleAnalyticsMeasurementId | GoogleAnalyticsMeasurementId[];
+	measurementId?:
+		| GoogleAnalyticsMeasurementId
+		| GoogleAnalyticsConfigParamsWithMeasurementId
+		| (GoogleAnalyticsMeasurementId | GoogleAnalyticsConfigParamsWithMeasurementId)[];
 	testMode?: boolean;
 }
 
 class GoogleAnalytics {
 	#initialize: boolean;
 	readonly #isQueuing: boolean;
-	readonly #measurementId: Set<GoogleAnalyticsMeasurementId>;
+	readonly #measurementId: Map<GoogleAnalyticsMeasurementId, GoogleAnalyticsConfigParams>;
 	readonly #queueGtag: GoogleAnalyticsArguments[];
 	#testMode: boolean;
 
@@ -43,7 +50,7 @@ class GoogleAnalytics {
 			throw new Error(`'GoogleAnalytics' is only available in the browser.`);
 		}
 		const [first, ...rest] = args;
-		this.#measurementId = new Set();
+		this.#measurementId = new Map();
 		this.#queueGtag = [];
 		this.#testMode = false;
 		this.#isQueuing = false;
@@ -59,25 +66,30 @@ class GoogleAnalytics {
 				this.addMeasurementId(...measurementId);
 			}
 		}
-		this.#measurementId.forEach(assertMeasurementId);
+		this.measurementIds.forEach(assertMeasurementId);
 	}
 
 	get defaultMeasurementId(): GoogleAnalyticsMeasurementId | undefined {
-		return this.#measurementId.values().next().value as GoogleAnalyticsMeasurementId | undefined;
+		return this.measurementIds[0];
 	}
 
 	get measurementIds(): GoogleAnalyticsMeasurementId[] {
-		return Array.from(this.#measurementId);
+		return Array.from(this.#measurementId.keys());
 	}
 
 	get #someQueued(): boolean {
 		return this.#queueGtag.length > 0;
 	}
 
-	addMeasurementId(...measurementId: GoogleAnalyticsMeasurementId[]): void {
+	addMeasurementId(
+		...measurementId: (GoogleAnalyticsMeasurementId | GoogleAnalyticsConfigParamsWithMeasurementId)[]
+	): void {
 		for (const id of measurementId) {
-			if (assertMeasurementId(id)) {
-				this.#measurementId.add(id);
+			if (typeof id === 'string' && assertMeasurementId(id)) {
+				this.#measurementId.set(id, {});
+			} else if (typeof id === 'object' && assertMeasurementId(id.measurementId)) {
+				const { measurementId: _, ...rest } = id;
+				this.#measurementId.set(id.measurementId, rest);
 			}
 		}
 	}
