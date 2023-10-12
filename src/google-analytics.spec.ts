@@ -111,7 +111,7 @@ describe('@hexatool/google-analytics', () => {
 	});
 
 	describe('addMeasurementId()', () => {
-		it('addMeasurementId()', () => {
+		it('addMeasurementId(measurementId: string)', () => {
 			// Given
 			ga = new GoogleAnalytics(GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2);
 
@@ -128,6 +128,25 @@ describe('@hexatool/google-analytics', () => {
 			expect(ga.measurementIds).toStrictEqual([GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2, GA_MEASUREMENT_ID_3]);
 			expectNotInit();
 		});
+		it('addMeasurementId(measurementId: string, object: GoogleAnalyticsConfigParamsWithMeasurementId)', () => {
+			// Given
+			ga = new GoogleAnalytics(GA_MEASUREMENT_ID);
+
+			// Then
+			expect(ga.defaultMeasurementId).toBe(GA_MEASUREMENT_ID);
+			expect(ga.measurementIds).toStrictEqual([GA_MEASUREMENT_ID]);
+			expectNotInit();
+
+			// When
+			ga.addMeasurementId(GA_MEASUREMENT_ID_3, {
+				measurementId: GA_MEASUREMENT_ID_2,
+			});
+
+			// Then
+			expect(ga.defaultMeasurementId).toBe(GA_MEASUREMENT_ID);
+			expect(ga.measurementIds).toStrictEqual([GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_3, GA_MEASUREMENT_ID_2]);
+			expectNotInit();
+		});
 	});
 
 	describe('config()', () => {
@@ -142,13 +161,16 @@ describe('@hexatool/google-analytics', () => {
 			});
 
 			// Then
-			expectArg([
-				'config',
-				GA_MEASUREMENT_ID,
-				{
-					groups: ['test'],
-				},
-			]);
+			expectArg(
+				[
+					'config',
+					GA_MEASUREMENT_ID,
+					{
+						groups: ['test'],
+					},
+				],
+				3
+			);
 			expectScript();
 		});
 		it('config(measurementID: GoogleAnalyticsMeasurementId, params?: GoogleAnalyticsConfigParams)', () => {
@@ -162,13 +184,16 @@ describe('@hexatool/google-analytics', () => {
 			});
 
 			// Then
-			expectArg([
-				'config',
-				GA_MEASUREMENT_ID_2,
-				{
-					groups: ['test'],
-				},
-			]);
+			expectArg(
+				[
+					'config',
+					GA_MEASUREMENT_ID_2,
+					{
+						groups: ['test'],
+					},
+				],
+				3
+			);
 			expectScript();
 		});
 	});
@@ -186,13 +211,16 @@ describe('@hexatool/google-analytics', () => {
 			});
 
 			// Then
-			expectArg([
-				'consent',
-				{
-					ad_storage: 'denied',
-					wait_for_update: 1000,
-				},
-			]);
+			expectArg(
+				[
+					'consent',
+					{
+						ad_storage: 'denied',
+						wait_for_update: 1000,
+					},
+				],
+				3
+			);
 			expectScript();
 		});
 	});
@@ -210,7 +238,7 @@ describe('@hexatool/google-analytics', () => {
 			});
 
 			// Then
-			expectArg(['event', 'test']);
+			expectArg(['event', 'test'], 2);
 			expectArg(
 				[
 					'event',
@@ -219,7 +247,7 @@ describe('@hexatool/google-analytics', () => {
 						foo: 'bar',
 					},
 				],
-				1
+				3
 			);
 			expectScript();
 		});
@@ -238,7 +266,7 @@ describe('@hexatool/google-analytics', () => {
 			ga.get('test', callback);
 
 			// Then
-			expectArg(['get', GA_MEASUREMENT_ID, 'test', callback]);
+			expectArg(['get', GA_MEASUREMENT_ID, 'test', callback], 3);
 			expectScript();
 		});
 		it('get(measurementID: GoogleAnalyticsMeasurementId, field: string, callback: GoogleAnalyticsGetCallback)', () => {
@@ -253,7 +281,7 @@ describe('@hexatool/google-analytics', () => {
 			ga.get(GA_MEASUREMENT_ID_2, 'test', callback);
 
 			// Then
-			expectArg(['get', GA_MEASUREMENT_ID_2, 'test', callback]);
+			expectArg(['get', GA_MEASUREMENT_ID_2, 'test', callback], 3);
 			expectScript();
 		});
 	});
@@ -272,7 +300,7 @@ describe('@hexatool/google-analytics', () => {
 			});
 
 			// Then
-			expectArg(['event', 'test']);
+			expectArg(['event', 'test'], 2);
 			expectArg(
 				[
 					'event',
@@ -282,7 +310,7 @@ describe('@hexatool/google-analytics', () => {
 						send_to: GA_MEASUREMENT_ID_2,
 					},
 				],
-				1
+				3
 			);
 			expectScript();
 		});
@@ -334,16 +362,16 @@ describe('@hexatool/google-analytics', () => {
 			ga.setTestMode(false);
 
 			// Then
-			expectArg(['event', 'test1'], 0);
-			expectArg(['event', 'test2'], 1);
+			expectArg(['event', 'test1'], 2);
+			expectArg(['event', 'test2'], 3);
 
 			// When
 			ga.gtag('event', 'test3');
 			ga.gtag('event', 'test4');
 
 			// Then
-			expectArg(['event', 'test3'], 2);
-			expectArg(['event', 'test4'], 3);
+			expectArg(['event', 'test3'], 4);
+			expectArg(['event', 'test4'], 5);
 		});
 		it('gtag(...args: GoogleTagArguments) whatever', () => {
 			// Given
@@ -360,7 +388,7 @@ describe('@hexatool/google-analytics', () => {
 			// Then
 
 			// @ts-expect-error Testing invalid arguments
-			expectArg([[1, 2], 'event', { foo: 'bar' }], 0);
+			expectArg([[1, 2], 'event', { foo: 'bar' }], 2);
 			expectScript();
 		});
 	});
@@ -368,18 +396,39 @@ describe('@hexatool/google-analytics', () => {
 	describe('initialize()', () => {
 		it('initialize()', () => {
 			// Given
-			ga = new GoogleAnalytics(GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2);
+			ga = new GoogleAnalytics({
+				measurementId: [
+					GA_MEASUREMENT_ID,
+					{
+						measurementId: GA_MEASUREMENT_ID_2,
+						user_id: '1',
+						send_page_view: false,
+					},
+				],
+			});
 
 			// When
 			ga.initialize();
 
 			// Then
-			expectEmptyLayer();
+			expectArg(['js', newDate]);
+			expectArg(['config', GA_MEASUREMENT_ID], 1);
+			expectArg(
+				[
+					'config',
+					GA_MEASUREMENT_ID_2,
+					{
+						user_id: '1',
+						send_page_view: false,
+					},
+				],
+				2
+			);
 			const exist = document.getElementById('google-tag-manager') as HTMLScriptElement;
 			expect(exist).not.toBeNull();
 			expect(exist.src).toBe(`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`);
 			expect(window.dataLayer).toBeDefined();
-			expect(window.dataLayer.length).toBe(0);
+			expect(window.dataLayer.length).toBe(3);
 		});
 		it('initialize() without measurement', () => {
 			// Given
@@ -409,7 +458,7 @@ describe('@hexatool/google-analytics', () => {
 			expect(exist).not.toBeNull();
 			expect(exist.src).toBe(`${FAKE_GOOGLE_TAG_URL}?id=${GA_MEASUREMENT_ID}&l=customLayer`);
 			expect(exist.attributes.getNamedItem('nonce')?.value).toBe(FAKE_NONCE);
-			expectArg(['event', 'page_view'], 0, FAKE_LAYER);
+			expectArg(['event', 'page_view'], 3, FAKE_LAYER);
 			expectNotLayer();
 		});
 	});
@@ -427,7 +476,7 @@ describe('@hexatool/google-analytics', () => {
 			});
 
 			// Then
-			expectArg(['set', GA_MEASUREMENT_ID, { country: 'US', currency: 'USD' }]);
+			expectArg(['set', GA_MEASUREMENT_ID, { country: 'US', currency: 'USD' }], 3);
 			expectScript();
 		});
 		it('config(measurementID: GoogleAnalyticsMeasurementId, params: GoogleAnalyticsSetParams)', () => {
@@ -442,7 +491,7 @@ describe('@hexatool/google-analytics', () => {
 			});
 
 			// Then
-			expectArg(['set', GA_MEASUREMENT_ID_2, { country: 'US', currency: 'USD' }]);
+			expectArg(['set', GA_MEASUREMENT_ID_2, { country: 'US', currency: 'USD' }], 3);
 			expectScript();
 		});
 	});

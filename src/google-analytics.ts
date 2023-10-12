@@ -14,6 +14,7 @@ import type {
 	GoogleAnalyticsExceptionEventParams,
 	GoogleAnalyticsGetArguments,
 	GoogleAnalyticsGetCallback,
+	GoogleAnalyticsJsArguments,
 	GoogleAnalyticsLoginEventArguments,
 	GoogleAnalyticsLoginEventParams,
 	GoogleAnalyticsMeasurementId,
@@ -101,9 +102,17 @@ class GoogleAnalytics {
 		params?: GoogleAnalyticsConfigParams
 	): void {
 		if (typeof measurementIdOrParams === 'string') {
-			this.gtag('config', measurementIdOrParams, params);
+			if (params && Object.keys(params).length === 0) {
+				this.gtag('config', measurementIdOrParams);
+			} else {
+				this.gtag('config', measurementIdOrParams, params);
+			}
 		} else if (this.defaultMeasurementId && typeof measurementIdOrParams === 'object') {
-			this.gtag('config', this.defaultMeasurementId, measurementIdOrParams);
+			if (Object.keys(measurementIdOrParams).length === 0) {
+				this.gtag('config', this.defaultMeasurementId);
+			} else {
+				this.gtag('config', this.defaultMeasurementId, measurementIdOrParams);
+			}
 		}
 	}
 
@@ -141,6 +150,7 @@ class GoogleAnalytics {
 		}
 	}
 
+	gtag(...args: GoogleAnalyticsJsArguments): void;
 	gtag(...args: GoogleAnalyticsPageViewEventArguments): void;
 	gtag(...args: GoogleAnalyticsExceptionEventArguments): void;
 	gtag(...args: GoogleAnalyticsLoginEventArguments): void;
@@ -173,6 +183,10 @@ class GoogleAnalytics {
 		}
 		loadGoogleAnalytics(defaultMeasurementId, googleTagUrl, nonce, layer);
 		this.#initialize = true;
+		this.gtag('js', new Date());
+		this.#measurementId.forEach((params, measurementId) => {
+			this.config(measurementId, params);
+		});
 	}
 
 	set(params: GoogleAnalyticsSetParams): void;
