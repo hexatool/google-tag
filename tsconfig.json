@@ -4,6 +4,6 @@
 		"experimentalDecorators": true,
 		"lib": ["dom", "es2022"]
 	},
-	"include": ["src", "env.d.ts", "vite.config.ts"],
+	"include": ["src", "env.d.ts", "vite.config.ts", "vite.config.react.ts"],
 	"exclude": ["dist", "node_modules"]
 }
