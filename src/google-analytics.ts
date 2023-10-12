@@ -22,6 +22,7 @@ import type {
 	GoogleAnalyticsSetArguments,
 	GoogleAnalyticsSetParams,
 } from './types';
+import type { InitializeOptions } from './types/initialize';
 
 interface GoogleAnalyticsOptions {
 	measurementId?: GoogleAnalyticsMeasurementId | GoogleAnalyticsMeasurementId[];
@@ -150,7 +151,7 @@ class GoogleAnalytics {
 		}
 	}
 
-	initialize(googleTagUrl?: string, nonce?: string): void {
+	initialize({ googleTagUrl, nonce, layer }: InitializeOptions = {}): void {
 		if (this.#initialize) {
 			return;
 		}
@@ -158,7 +159,7 @@ class GoogleAnalytics {
 		if (!defaultMeasurementId) {
 			throw new Error('No Google Analytics Measurement ID provided.');
 		}
-		loadGoogleAnalytics(defaultMeasurementId, googleTagUrl, nonce);
+		loadGoogleAnalytics(defaultMeasurementId, googleTagUrl, nonce, layer);
 		this.#initialize = true;
 	}
 
