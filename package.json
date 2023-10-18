@@ -42,7 +42,7 @@
 		"eslint": "8.51.0",
 		"happy-dom": "12.9.1",
 		"typescript": "5.2.2",
-		"vite": "4.4.11",
+		"vite": "4.5.0",
 		"vite-plugin-dts": "3.6.0",
 		"vitest": "0.34.6"
 	},
