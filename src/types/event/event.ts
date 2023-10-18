@@ -1,1 +1,1 @@
-export type GoogleAnalyticsEvent = 'page_view' | 'login' | 'exception';
+export type GoogleTagEvent = 'page_view' | 'login' | 'exception';

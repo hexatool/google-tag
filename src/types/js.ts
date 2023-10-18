@@ -1,1 +1,1 @@
-export type GoogleAnalyticsJsArguments = ['js', Date];
+export type GoogleTagJsArguments = ['js', Date];

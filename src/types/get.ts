@@ -1,8 +1,8 @@
 import type { GoogleTagMeasurementId } from './measurement-id';
-import type { GoogleAnalyticsParamsPrimitives } from './params';
+import type { GoogleTagParamsPrimitives } from './params';
 
-type GoogleAnalyticsGetCallback = (value?: GoogleAnalyticsParamsPrimitives) => void;
+type GoogleTagGetCallback = (value?: GoogleTagParamsPrimitives) => void;
 
-type GoogleAnalyticsGetArguments = ['get', GoogleTagMeasurementId, string, GoogleAnalyticsGetCallback];
+type GoogleTagGetArguments = ['get', GoogleTagMeasurementId, string, GoogleTagGetCallback];
 
-export type { GoogleAnalyticsGetArguments, GoogleAnalyticsGetCallback };
+export type { GoogleTagGetArguments, GoogleTagGetCallback };

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/google-analytics.iml" filepath="$PROJECT_DIR$/.idea/google-analytics.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/google-tag.iml" filepath="$PROJECT_DIR$/.idea/google-tag.iml" />
     </modules>
   </component>
 </project>

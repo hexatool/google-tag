@@ -1,29 +1,27 @@
 import { useEffect } from 'react';
 
-import type { GoogleAnalyticsOptions } from './google-analytics';
-import GoogleAnalytics from './google-analytics';
+import type { GoogleTagOptions } from './google-tag';
+import GoogleTag from './google-tag';
 import type { GoogleTagMeasurementId, InitializeOptions } from './types';
 
-interface GoogleAnalyticsHookOptions extends GoogleAnalyticsOptions, InitializeOptions {
+interface GoogleTagHookOptions extends GoogleTagOptions, InitializeOptions {
 	initialize?: boolean;
 }
 
-function useGoogleAnalytics(...measurementIds: GoogleTagMeasurementId[]): GoogleAnalytics;
-function useGoogleAnalytics(options: GoogleAnalyticsHookOptions): GoogleAnalytics;
-function useGoogleAnalytics(
-	...args: [GoogleAnalyticsHookOptions | GoogleTagMeasurementId, ...GoogleTagMeasurementId[]]
-): GoogleAnalytics;
-function useGoogleAnalytics(
-	...args: [GoogleAnalyticsHookOptions | GoogleTagMeasurementId, ...GoogleTagMeasurementId[]]
-): GoogleAnalytics {
+function useGoogleTag(...measurementIds: GoogleTagMeasurementId[]): GoogleTag;
+function useGoogleTag(options: GoogleTagHookOptions): GoogleTag;
+function useGoogleTag(...args: [GoogleTagHookOptions | GoogleTagMeasurementId, ...GoogleTagMeasurementId[]]): GoogleTag;
+function useGoogleTag(
+	...args: [GoogleTagHookOptions | GoogleTagMeasurementId, ...GoogleTagMeasurementId[]]
+): GoogleTag {
 	const [first, ...rest] = args;
-	let ga: GoogleAnalytics;
+	let ga: GoogleTag;
 	let initOptions: InitializeOptions = {};
 	let initialize = false;
 	if (typeof first === 'string') {
-		ga = new GoogleAnalytics(first, ...rest);
+		ga = new GoogleTag(first, ...rest);
 	} else if (typeof first === 'object') {
-		ga = new GoogleAnalytics(first);
+		ga = new GoogleTag(first);
 		initialize = first.initialize ?? false;
 		initOptions = first;
 	} else {
@@ -38,7 +36,7 @@ function useGoogleAnalytics(
 	return ga;
 }
 
-export type { GoogleAnalyticsHookOptions };
+export type { GoogleTagHookOptions };
 
 export * from './index';
-export { useGoogleAnalytics };
+export { useGoogleTag };

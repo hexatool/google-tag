@@ -1,7 +1,7 @@
-import type { GoogleAnalyticsArgumentsTyped } from '../arguments';
-import type { GoogleAnalyticsEventCommonParams } from './params';
+import type { GoogleTagArgumentsTyped } from '../arguments';
+import type { GoogleTagEventCommonParams } from './params';
 
-interface GoogleAnalyticsPageViewEventParams extends GoogleAnalyticsEventCommonParams {
+interface GoogleTagPageViewEventParams extends GoogleTagEventCommonParams {
 	client_id?: string;
 	language?: string;
 	page_encoding?: string;
@@ -10,10 +10,6 @@ interface GoogleAnalyticsPageViewEventParams extends GoogleAnalyticsEventCommonP
 	user_agent?: string;
 }
 
-type GoogleAnalyticsPageViewEventArguments = GoogleAnalyticsArgumentsTyped<
-	'event',
-	'page_view',
-	GoogleAnalyticsPageViewEventParams
->;
+type GoogleTagPageViewEventArguments = GoogleTagArgumentsTyped<'event', 'page_view', GoogleTagPageViewEventParams>;
 
-export type { GoogleAnalyticsPageViewEventArguments, GoogleAnalyticsPageViewEventParams };
+export type { GoogleTagPageViewEventArguments, GoogleTagPageViewEventParams };

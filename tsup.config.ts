@@ -7,8 +7,8 @@ export default defineConfig([
 		dts: true,
 		clean: true,
 		entry: {
-			'google-analytics': './src/index.ts',
-			'google-analytics-react': './src/react.ts',
+			'google-tag': './src/index.ts',
+			'google-tag-react': './src/react.ts',
 		},
 	},
 	{
@@ -16,8 +16,8 @@ export default defineConfig([
 		format: ['umd'],
 		minify: true,
 		entry: {
-			'google-analytics': './src/index.ts',
-			'google-analytics-react': './src/react.ts',
+			'google-tag': './src/index.ts',
+			'google-tag-react': './src/react.ts',
 		},
 		outExtension: () => ({
 			js: `.umd.min.js`,

@@ -1,12 +1,12 @@
-import type { GoogleAnalyticsParamsWithCallback } from './params';
+import type { GoogleTagParamsWithCallback } from './params';
 
-interface GoogleAnalyticsConsentParams extends GoogleAnalyticsParamsWithCallback {
+interface GoogleTagConsentParams extends GoogleTagParamsWithCallback {
 	ad_storage?: 'denied' | 'granted';
 	analytics_storage?: 'denied' | 'granted';
 	region?: string[];
 	wait_for_update?: number;
 }
 
-type GoogleAnalyticsConsentArguments = ['consent', GoogleAnalyticsConsentParams];
+type GoogleTagConsentArguments = ['consent', GoogleTagConsentParams];
 
-export type { GoogleAnalyticsConsentArguments, GoogleAnalyticsConsentParams };
+export type { GoogleTagConsentArguments, GoogleTagConsentParams };

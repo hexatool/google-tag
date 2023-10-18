@@ -1,8 +1,8 @@
-import type { GoogleAnalyticsOptions } from './google-analytics';
-import GoogleAnalytics from './google-analytics';
+import type { GoogleTagOptions } from './google-tag';
+import GoogleTag from './google-tag';
 
 export * from './types';
 
-export type { GoogleAnalyticsOptions };
+export type { GoogleTagOptions };
 
-export { GoogleAnalytics };
+export { GoogleTag };

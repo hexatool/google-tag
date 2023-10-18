@@ -1,1 +1,1 @@
-export type GoogleAnalyticsCommand = 'config' | 'get' | 'set' | 'event' | 'consent';
+export type GoogleTagCommand = 'config' | 'get' | 'set' | 'event' | 'consent';

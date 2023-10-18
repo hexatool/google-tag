@@ -1,57 +1,57 @@
 import type {
-	GoogleAnalyticsArguments,
-	GoogleAnalyticsConfigArguments,
-	GoogleAnalyticsConfigParams,
-	GoogleAnalyticsConsentArguments,
-	GoogleAnalyticsConsentParams,
-	GoogleAnalyticsCustomEventArguments,
-	GoogleAnalyticsEvent,
-	GoogleAnalyticsEventCommonParams,
-	GoogleAnalyticsExceptionEventArguments,
-	GoogleAnalyticsExceptionEventParams,
-	GoogleAnalyticsGetArguments,
-	GoogleAnalyticsGetCallback,
-	GoogleAnalyticsJsArguments,
-	GoogleAnalyticsLoginEventArguments,
-	GoogleAnalyticsLoginEventParams,
-	GoogleAnalyticsPageViewEventArguments,
-	GoogleAnalyticsPageViewEventParams,
-	GoogleAnalyticsSetArguments,
-	GoogleAnalyticsSetMeasurementIdArguments,
-	GoogleAnalyticsSetParams,
+	GoogleTagArguments,
+	GoogleTagConfigArguments,
+	GoogleTagConfigParams,
+	GoogleTagConsentArguments,
+	GoogleTagConsentParams,
+	GoogleTagCustomEventArguments,
+	GoogleTagEvent,
+	GoogleTagEventCommonParams,
+	GoogleTagExceptionEventArguments,
+	GoogleTagExceptionEventParams,
+	GoogleTagGetArguments,
+	GoogleTagGetCallback,
+	GoogleTagJsArguments,
+	GoogleTagLoginEventArguments,
+	GoogleTagLoginEventParams,
 	GoogleTagMeasurementId,
+	GoogleTagPageViewEventArguments,
+	GoogleTagPageViewEventParams,
+	GoogleTagSetArguments,
+	GoogleTagSetMeasurementIdArguments,
+	GoogleTagSetParams,
 	InitializeOptions,
 } from './types';
 
-interface GoogleAnalyticsConfigParamsWithMeasurementId extends GoogleAnalyticsConfigParams {
+interface GoogleTagConfigParamsWithMeasurementId extends GoogleTagConfigParams {
 	measurementId: GoogleTagMeasurementId;
 }
 
-interface GoogleAnalyticsOptions {
+interface GoogleTagOptions {
 	allowAdPersonalizationSignals?: false;
 	measurementId?:
 		| GoogleTagMeasurementId
-		| GoogleAnalyticsConfigParamsWithMeasurementId
-		| (GoogleTagMeasurementId | GoogleAnalyticsConfigParamsWithMeasurementId)[];
+		| GoogleTagConfigParamsWithMeasurementId
+		| (GoogleTagMeasurementId | GoogleTagConfigParamsWithMeasurementId)[];
 	testMode?: boolean;
 }
 
 const GOOGLE_TAG_MEASUREMENT_ID_REGEXP = /^(?:G|GT|AW|DC)-[A-Z0-9]{10}$/;
 const DEFAULT_GOOGLE_TAG_URL = 'https://www.googletagmanager.com/gtag/js';
 
-class GoogleAnalytics {
+class GoogleTag {
 	readonly #allowAdPersonalizationSignals?: false;
 	#initialize: boolean;
 	readonly #isQueuing: boolean;
-	readonly #measurementId: Map<GoogleTagMeasurementId, GoogleAnalyticsConfigParams>;
-	readonly #queueGtag: GoogleAnalyticsArguments[];
+	readonly #measurementId: Map<GoogleTagMeasurementId, GoogleTagConfigParams>;
+	readonly #queueGtag: GoogleTagArguments[];
 	#testMode: boolean;
 
 	constructor(...measurementIds: GoogleTagMeasurementId[]);
-	constructor(options: GoogleAnalyticsOptions);
-	constructor(...args: [GoogleAnalyticsOptions | GoogleTagMeasurementId, ...GoogleTagMeasurementId[]]) {
+	constructor(options: GoogleTagOptions);
+	constructor(...args: [GoogleTagOptions | GoogleTagMeasurementId, ...GoogleTagMeasurementId[]]) {
 		if (typeof window === 'undefined' || typeof document === 'undefined') {
-			throw new Error(`'GoogleAnalytics' is only available in the browser.`);
+			throw new Error(`'GoogleTag' is only available in the browser.`);
 		}
 		const [first, ...rest] = args;
 		this.#measurementId = new Map();
@@ -90,9 +90,7 @@ class GoogleAnalytics {
 		return this.#queueGtag.length > 0;
 	}
 
-	addMeasurementId(
-		...measurementId: (GoogleTagMeasurementId | GoogleAnalyticsConfigParamsWithMeasurementId)[]
-	): void {
+	addMeasurementId(...measurementId: (GoogleTagMeasurementId | GoogleTagConfigParamsWithMeasurementId)[]): void {
 		for (const id of measurementId) {
 			if (typeof id === 'string' && this.#assertMeasurementId(id)) {
 				this.#measurementId.set(id, {});
@@ -103,11 +101,11 @@ class GoogleAnalytics {
 		}
 	}
 
-	config(params: GoogleAnalyticsConfigParams): void;
-	config(measurementID: GoogleTagMeasurementId, params?: GoogleAnalyticsConfigParams): void;
+	config(params: GoogleTagConfigParams): void;
+	config(measurementID: GoogleTagMeasurementId, params?: GoogleTagConfigParams): void;
 	config(
-		measurementIdOrParams: GoogleTagMeasurementId | GoogleAnalyticsConfigParams,
-		params?: GoogleAnalyticsConfigParams
+		measurementIdOrParams: GoogleTagMeasurementId | GoogleTagConfigParams,
+		params?: GoogleTagConfigParams
 	): void {
 		if (typeof measurementIdOrParams === 'string') {
 			if (params && Object.keys(params).length === 0) {
@@ -124,15 +122,15 @@ class GoogleAnalytics {
 		}
 	}
 
-	consent(params: GoogleAnalyticsConsentParams): void {
+	consent(params: GoogleTagConsentParams): void {
 		this.gtag('consent', params);
 	}
 
-	event(event: 'login', params?: GoogleAnalyticsLoginEventParams): void;
-	event(event: 'exception', params?: GoogleAnalyticsExceptionEventParams): void;
-	event(event: 'page_view', params?: GoogleAnalyticsPageViewEventParams): void;
-	event(event: string, params?: GoogleAnalyticsEventCommonParams): void;
-	event(event: GoogleAnalyticsEvent, params?: GoogleAnalyticsEventCommonParams): void {
+	event(event: 'login', params?: GoogleTagLoginEventParams): void;
+	event(event: 'exception', params?: GoogleTagExceptionEventParams): void;
+	event(event: 'page_view', params?: GoogleTagPageViewEventParams): void;
+	event(event: string, params?: GoogleTagEventCommonParams): void;
+	event(event: GoogleTagEvent, params?: GoogleTagEventCommonParams): void {
 		if (params) {
 			this.gtag('event', event, params);
 		} else {
@@ -140,12 +138,12 @@ class GoogleAnalytics {
 		}
 	}
 
-	get(field: string, callback: GoogleAnalyticsGetCallback): void;
-	get(measurementID: GoogleTagMeasurementId, field: string, callback: GoogleAnalyticsGetCallback): void;
+	get(field: string, callback: GoogleTagGetCallback): void;
+	get(measurementID: GoogleTagMeasurementId, field: string, callback: GoogleTagGetCallback): void;
 	get(
 		fieldOrMeasurementID: string,
-		fieldOrCallBack: string | GoogleAnalyticsGetCallback,
-		callback?: GoogleAnalyticsGetCallback
+		fieldOrCallBack: string | GoogleTagGetCallback,
+		callback?: GoogleTagGetCallback
 	): void {
 		if (this.#isGoogleTagMeasurementId(fieldOrMeasurementID) && typeof fieldOrCallBack === 'string' && callback) {
 			this.gtag('get', fieldOrMeasurementID, fieldOrCallBack, callback);
@@ -158,17 +156,17 @@ class GoogleAnalytics {
 		}
 	}
 
-	gtag(...args: GoogleAnalyticsJsArguments): void;
-	gtag(...args: GoogleAnalyticsPageViewEventArguments): void;
-	gtag(...args: GoogleAnalyticsExceptionEventArguments): void;
-	gtag(...args: GoogleAnalyticsLoginEventArguments): void;
-	gtag(...args: GoogleAnalyticsCustomEventArguments): void;
-	gtag(...args: GoogleAnalyticsConfigArguments): void;
-	gtag(...args: GoogleAnalyticsGetArguments): void;
-	gtag(...args: GoogleAnalyticsSetArguments): void;
-	gtag(...args: GoogleAnalyticsSetMeasurementIdArguments): void;
-	gtag(...args: GoogleAnalyticsConsentArguments): void;
-	gtag(...args: GoogleAnalyticsArguments): void {
+	gtag(...args: GoogleTagJsArguments): void;
+	gtag(...args: GoogleTagPageViewEventArguments): void;
+	gtag(...args: GoogleTagExceptionEventArguments): void;
+	gtag(...args: GoogleTagLoginEventArguments): void;
+	gtag(...args: GoogleTagCustomEventArguments): void;
+	gtag(...args: GoogleTagConfigArguments): void;
+	gtag(...args: GoogleTagGetArguments): void;
+	gtag(...args: GoogleTagSetArguments): void;
+	gtag(...args: GoogleTagSetMeasurementIdArguments): void;
+	gtag(...args: GoogleTagConsentArguments): void;
+	gtag(...args: GoogleTagArguments): void {
 		if (!this.#initialize) {
 			throw new Error('Google Analytics is not initialized.');
 		}
@@ -190,7 +188,7 @@ class GoogleAnalytics {
 		if (!defaultMeasurementId) {
 			throw new Error('No Google Analytics Measurement ID provided.');
 		}
-		this.#loadGoogleAnalytics(defaultMeasurementId, googleTagUrl, nonce, layer);
+		this.#loadGoogleTag(defaultMeasurementId, googleTagUrl, nonce, layer);
 		this.#initialize = true;
 		if (this.#allowAdPersonalizationSignals === false) {
 			this.gtag('set', 'allow_ad_personalization_signals', false);
@@ -201,14 +199,11 @@ class GoogleAnalytics {
 		});
 	}
 
-	set(params: GoogleAnalyticsSetParams): void;
+	set(params: GoogleTagSetParams): void;
 
-	set(measurementID: GoogleTagMeasurementId, params: GoogleAnalyticsSetParams): void;
+	set(measurementID: GoogleTagMeasurementId, params: GoogleTagSetParams): void;
 
-	set(
-		measurementIdOrParams: GoogleTagMeasurementId | GoogleAnalyticsSetParams,
-		params?: GoogleAnalyticsSetParams
-	): void {
+	set(measurementIdOrParams: GoogleTagMeasurementId | GoogleTagSetParams, params?: GoogleTagSetParams): void {
 		if (typeof measurementIdOrParams === 'string' && params) {
 			this.gtag('set', measurementIdOrParams, params);
 		} else if (this.defaultMeasurementId && typeof measurementIdOrParams === 'object') {
@@ -249,7 +244,7 @@ class GoogleAnalytics {
 		}
 	}
 
-	#gtag(...args: GoogleAnalyticsArguments): void {
+	#gtag(...args: GoogleTagArguments): void {
 		if (typeof window === 'undefined') {
 			return;
 		}
@@ -271,7 +266,7 @@ class GoogleAnalytics {
 		return GOOGLE_TAG_MEASUREMENT_ID_REGEXP.test(value);
 	}
 
-	#loadGoogleAnalytics(
+	#loadGoogleTag(
 		measurementID: GoogleTagMeasurementId,
 		googleTagUrl = DEFAULT_GOOGLE_TAG_URL,
 		nonce?: string,
@@ -306,6 +301,6 @@ class GoogleAnalytics {
 	}
 }
 
-export type { GoogleAnalyticsOptions };
+export type { GoogleTagOptions };
 
-export default GoogleAnalytics;
+export default GoogleTag;

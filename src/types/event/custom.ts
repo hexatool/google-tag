@@ -1,16 +1,12 @@
-import type { GoogleAnalyticsArgumentsTyped } from '../arguments';
-import type { GoogleAnalyticsEventCommonParams } from './params';
+import type { GoogleTagArgumentsTyped } from '../arguments';
+import type { GoogleTagEventCommonParams } from './params';
 
-interface GoogleAnalyticsCustomEventParams extends GoogleAnalyticsEventCommonParams {
+interface GoogleTagCustomEventParams extends GoogleTagEventCommonParams {
 	event_category?: string;
 	event_label?: string;
 	value?: number;
 }
 
-type GoogleAnalyticsCustomEventArguments = GoogleAnalyticsArgumentsTyped<
-	'event',
-	string,
-	GoogleAnalyticsCustomEventParams
->;
+type GoogleTagCustomEventArguments = GoogleTagArgumentsTyped<'event', string, GoogleTagCustomEventParams>;
 
-export type { GoogleAnalyticsCustomEventArguments, GoogleAnalyticsCustomEventParams };
+export type { GoogleTagCustomEventArguments, GoogleTagCustomEventParams };
