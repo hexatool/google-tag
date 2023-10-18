@@ -1,11 +1,9 @@
 .changeset
 .github
 .idea
-test
 src
 .eslintignore
 .eslintrc.json
 bun.lockb
 renovate.json
 tsconfig.json
-vite.config.ts
