@@ -58,8 +58,8 @@ jobs:
             -   name: Create Release Pull Request or Publish to npm
                 uses: changesets/action@v1
                 with:
-                    publish: bun publish
-                    version: bun version
+                    publish: bun run publish
+                    version: bun run version
                     commit: 'chore: release'
                     title: 'chore: release'
                     setupGitUser: false
