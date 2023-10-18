@@ -1,9 +1,19 @@
 {
 	"extends": "@hexatool/tsconfig",
 	"compilerOptions": {
-		"experimentalDecorators": true,
-		"lib": ["dom", "es2022"]
+		// Add Bun type definitions
+		"types": ["bun-types"],
+
+		// Enable latest features
+		"lib": ["ESNext"],
+		"module": "esnext",
+		"target": "esnext",
+
+		// If TS 5.x+
+		"moduleResolution": "bundler",
+		"noEmit": true,
+		"allowImportingTsExtensions": true,
+		"moduleDetection": "force"
 	},
-	"include": ["src", "env.d.ts", "vite.config.ts", "vite.config.react.ts"],
 	"exclude": ["dist", "node_modules"]
 }
