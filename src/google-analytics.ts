@@ -1,6 +1,5 @@
 import assertMeasurementId from './assert/assert-google-analytics-measurement-id';
 import { isGoogleAnalyticsMeasurementId, loadGoogleAnalytics } from './fn';
-import gtag from './google-tag';
 import type {
 	GoogleAnalyticsArguments,
 	GoogleAnalyticsConfigArguments,
@@ -176,7 +175,7 @@ class GoogleAnalytics {
 			if (this.#someQueued) {
 				this.#flushQueue();
 			}
-			gtag(...args);
+			this.#gtag(...args);
 		}
 	}
 
@@ -200,7 +199,9 @@ class GoogleAnalytics {
 	}
 
 	set(params: GoogleAnalyticsSetParams): void;
+
 	set(measurementID: GoogleAnalyticsMeasurementId, params: GoogleAnalyticsSetParams): void;
+
 	set(
 		measurementIdOrParams: GoogleAnalyticsMeasurementId | GoogleAnalyticsSetParams,
 		params?: GoogleAnalyticsSetParams
@@ -232,9 +233,23 @@ class GoogleAnalytics {
 		while (this.#queueGtag.length > 0) {
 			const args = this.#queueGtag.shift();
 			if (args) {
-				gtag(...args);
+				this.#gtag(...args);
 			}
 		}
+	}
+
+	#gtag(...args: GoogleAnalyticsArguments): void {
+		if (typeof window === 'undefined') {
+			return;
+		}
+
+		if (!('gtag' in window)) {
+			return;
+		}
+		if (typeof window.gtag !== 'function') {
+			return;
+		}
+		window.gtag(...args);
 	}
 }
 
