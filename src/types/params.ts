@@ -1,4 +1,4 @@
-import type { GoogleAnalyticsMeasurementId } from './measurement-id';
+import type { GoogleTagMeasurementId } from './measurement-id';
 
 type GoogleAnalyticsParamsPrimitives = string | number | boolean | undefined | null;
 type GoogleAnalyticsParamsPrimitivesWithCallback = GoogleAnalyticsParamsPrimitives | ((...args: unknown[]) => void);
@@ -14,7 +14,7 @@ interface GoogleAnalyticsCommonParams extends GoogleAnalyticsParamsWithCallback 
 	event_callback?: () => void;
 	event_timeout?: number;
 	groups?: string | string[];
-	send_to?: GoogleAnalyticsMeasurementId | GoogleAnalyticsMeasurementId[];
+	send_to?: GoogleTagMeasurementId | GoogleTagMeasurementId[];
 }
 
 export type {

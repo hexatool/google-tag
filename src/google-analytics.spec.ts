@@ -9,9 +9,9 @@ setSystemTime(newDate);
 
 describe('@hexatool/google-analytics', () => {
 	let ga: GoogleAnalytics;
-	const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
-	const GA_MEASUREMENT_ID_2 = 'G-YYYYYYYYYY';
-	const GA_MEASUREMENT_ID_3 = 'G-ZZZZZZZZZZ';
+	const MEASUREMENT_ID = 'GT-XXXXXXXXXX';
+	const MEASUREMENT_ID_2 = 'G-YYYYYYYYYY';
+	const MEASUREMENT_ID_3 = 'DC-ZZZZZZZZZZ';
 	const FAKE_GOOGLE_TAG_URL = 'https://www.example.com/gtag/js';
 	const FAKE_NONCE = 'fake-nonce';
 	const FAKE_LAYER = 'customLayer';
@@ -65,30 +65,30 @@ describe('@hexatool/google-analytics', () => {
 	describe('constructor()', () => {
 		it('new GoogleAnalytics(...measurementId: string[])', () => {
 			// When
-			ga = new GoogleAnalytics(GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2);
+			ga = new GoogleAnalytics(MEASUREMENT_ID, MEASUREMENT_ID_2);
 
 			// Then
-			expect(ga.defaultMeasurementId).toBe(GA_MEASUREMENT_ID);
-			expect(ga.measurementIds).toStrictEqual([GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2]);
+			expect(ga.defaultMeasurementId).toBe(MEASUREMENT_ID);
+			expect(ga.measurementIds).toStrictEqual([MEASUREMENT_ID, MEASUREMENT_ID_2]);
 			expectNotInit();
 		});
 		it('new GoogleAnalytics(...measurementId: string[]) with repeated ids', () => {
 			// When
-			ga = new GoogleAnalytics(GA_MEASUREMENT_ID, GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2);
+			ga = new GoogleAnalytics(MEASUREMENT_ID, MEASUREMENT_ID, MEASUREMENT_ID_2);
 
 			// Then
-			expect(ga.defaultMeasurementId).toBe(GA_MEASUREMENT_ID);
-			expect(ga.measurementIds).toStrictEqual([GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2]);
+			expect(ga.defaultMeasurementId).toBe(MEASUREMENT_ID);
+			expect(ga.measurementIds).toStrictEqual([MEASUREMENT_ID, MEASUREMENT_ID_2]);
 			expectNotInit();
 		});
 		it('new GoogleAnalytics(...measurementId: string[]) with invalid format', () => {
 			// Given
-			const badFormat = 'invalid-format';
+			const badFormat = 'UA-128378752-3';
 			// @ts-expect-error Testing invalid format
 			const fn = () => new GoogleAnalytics(badFormat);
 
 			// When / Then
-			expect(fn).toThrow(`Invalid Google Tag Measurement Id format. Expected 'G-XXXXXXXXXX'.`);
+			expect(fn).toThrow(`Invalid Google Tag Measurement Id format. Expected '[G|GT|AW|DC]-XXXXXXXXXX'.`);
 
 			// Then
 			expectNotInit();
@@ -98,16 +98,16 @@ describe('@hexatool/google-analytics', () => {
 			ga = new GoogleAnalytics({
 				measurementId: [
 					{
-						measurementId: GA_MEASUREMENT_ID_3,
+						measurementId: MEASUREMENT_ID_3,
 					},
-					GA_MEASUREMENT_ID,
-					GA_MEASUREMENT_ID_2,
+					MEASUREMENT_ID,
+					MEASUREMENT_ID_2,
 				],
 			});
 
 			// Then
-			expect(ga.defaultMeasurementId).toBe(GA_MEASUREMENT_ID_3);
-			expect(ga.measurementIds).toStrictEqual([GA_MEASUREMENT_ID_3, GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2]);
+			expect(ga.defaultMeasurementId).toBe(MEASUREMENT_ID_3);
+			expect(ga.measurementIds).toStrictEqual([MEASUREMENT_ID_3, MEASUREMENT_ID, MEASUREMENT_ID_2]);
 			expectNotInit();
 		});
 	});
@@ -115,38 +115,38 @@ describe('@hexatool/google-analytics', () => {
 	describe('addMeasurementId()', () => {
 		it('addMeasurementId(measurementId: string)', () => {
 			// Given
-			ga = new GoogleAnalytics(GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2);
+			ga = new GoogleAnalytics(MEASUREMENT_ID, MEASUREMENT_ID_2);
 
 			// Then
-			expect(ga.defaultMeasurementId).toBe(GA_MEASUREMENT_ID);
-			expect(ga.measurementIds).toStrictEqual([GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2]);
+			expect(ga.defaultMeasurementId).toBe(MEASUREMENT_ID);
+			expect(ga.measurementIds).toStrictEqual([MEASUREMENT_ID, MEASUREMENT_ID_2]);
 			expectNotInit();
 
 			// When
-			ga.addMeasurementId(GA_MEASUREMENT_ID_3);
+			ga.addMeasurementId(MEASUREMENT_ID_3);
 
 			// Then
-			expect(ga.defaultMeasurementId).toBe(GA_MEASUREMENT_ID);
-			expect(ga.measurementIds).toStrictEqual([GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2, GA_MEASUREMENT_ID_3]);
+			expect(ga.defaultMeasurementId).toBe(MEASUREMENT_ID);
+			expect(ga.measurementIds).toStrictEqual([MEASUREMENT_ID, MEASUREMENT_ID_2, MEASUREMENT_ID_3]);
 			expectNotInit();
 		});
 		it('addMeasurementId(measurementId: string, object: GoogleAnalyticsConfigParamsWithMeasurementId)', () => {
 			// Given
-			ga = new GoogleAnalytics(GA_MEASUREMENT_ID);
+			ga = new GoogleAnalytics(MEASUREMENT_ID);
 
 			// Then
-			expect(ga.defaultMeasurementId).toBe(GA_MEASUREMENT_ID);
-			expect(ga.measurementIds).toStrictEqual([GA_MEASUREMENT_ID]);
+			expect(ga.defaultMeasurementId).toBe(MEASUREMENT_ID);
+			expect(ga.measurementIds).toStrictEqual([MEASUREMENT_ID]);
 			expectNotInit();
 
 			// When
-			ga.addMeasurementId(GA_MEASUREMENT_ID_3, {
-				measurementId: GA_MEASUREMENT_ID_2,
+			ga.addMeasurementId(MEASUREMENT_ID_3, {
+				measurementId: MEASUREMENT_ID_2,
 			});
 
 			// Then
-			expect(ga.defaultMeasurementId).toBe(GA_MEASUREMENT_ID);
-			expect(ga.measurementIds).toStrictEqual([GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_3, GA_MEASUREMENT_ID_2]);
+			expect(ga.defaultMeasurementId).toBe(MEASUREMENT_ID);
+			expect(ga.measurementIds).toStrictEqual([MEASUREMENT_ID, MEASUREMENT_ID_3, MEASUREMENT_ID_2]);
 			expectNotInit();
 		});
 	});
@@ -154,7 +154,7 @@ describe('@hexatool/google-analytics', () => {
 	describe('config()', () => {
 		it('config(params: GoogleAnalyticsConfigParams)', () => {
 			// Given
-			ga = new GoogleAnalytics(GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2);
+			ga = new GoogleAnalytics(MEASUREMENT_ID, MEASUREMENT_ID_2);
 			ga.initialize();
 
 			// When
@@ -166,7 +166,7 @@ describe('@hexatool/google-analytics', () => {
 			expectArg(
 				[
 					'config',
-					GA_MEASUREMENT_ID,
+					MEASUREMENT_ID,
 					{
 						groups: ['test'],
 					},
@@ -177,11 +177,11 @@ describe('@hexatool/google-analytics', () => {
 		});
 		it('config(measurementID: GoogleAnalyticsMeasurementId, params?: GoogleAnalyticsConfigParams)', () => {
 			// Given
-			ga = new GoogleAnalytics(GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2);
+			ga = new GoogleAnalytics(MEASUREMENT_ID, MEASUREMENT_ID_2);
 			ga.initialize();
 
 			// When
-			ga.config(GA_MEASUREMENT_ID_2, {
+			ga.config(MEASUREMENT_ID_2, {
 				groups: ['test'],
 			});
 
@@ -189,7 +189,7 @@ describe('@hexatool/google-analytics', () => {
 			expectArg(
 				[
 					'config',
-					GA_MEASUREMENT_ID_2,
+					MEASUREMENT_ID_2,
 					{
 						groups: ['test'],
 					},
@@ -203,7 +203,7 @@ describe('@hexatool/google-analytics', () => {
 	describe('consent()', () => {
 		it('consent(params: GoogleAnalyticsConsentParams)', () => {
 			// Given
-			ga = new GoogleAnalytics(GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2);
+			ga = new GoogleAnalytics(MEASUREMENT_ID, MEASUREMENT_ID_2);
 			ga.initialize();
 
 			// When
@@ -230,7 +230,7 @@ describe('@hexatool/google-analytics', () => {
 	describe('event()', () => {
 		it('event(...args: GoogleTagArguments)', () => {
 			// Given
-			ga = new GoogleAnalytics(GA_MEASUREMENT_ID);
+			ga = new GoogleAnalytics(MEASUREMENT_ID);
 			ga.initialize();
 
 			// When
@@ -258,7 +258,7 @@ describe('@hexatool/google-analytics', () => {
 	describe('get()', () => {
 		it('get(field: string, callback: GoogleAnalyticsGetCallback)', () => {
 			// Given
-			ga = new GoogleAnalytics(GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2);
+			ga = new GoogleAnalytics(MEASUREMENT_ID, MEASUREMENT_ID_2);
 			ga.initialize();
 			const callback = (_result?: GoogleAnalyticsParamsPrimitives) => {
 				// Callback
@@ -268,22 +268,22 @@ describe('@hexatool/google-analytics', () => {
 			ga.get('test', callback);
 
 			// Then
-			expectArg(['get', GA_MEASUREMENT_ID, 'test', callback], 3);
+			expectArg(['get', MEASUREMENT_ID, 'test', callback], 3);
 			expectScript();
 		});
 		it('get(measurementID: GoogleAnalyticsMeasurementId, field: string, callback: GoogleAnalyticsGetCallback)', () => {
 			// Given
-			ga = new GoogleAnalytics(GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2);
+			ga = new GoogleAnalytics(MEASUREMENT_ID, MEASUREMENT_ID_2);
 			ga.initialize();
 			const callback = (_result?: GoogleAnalyticsParamsPrimitives) => {
 				// Callback
 			};
 
 			// When
-			ga.get(GA_MEASUREMENT_ID_2, 'test', callback);
+			ga.get(MEASUREMENT_ID_2, 'test', callback);
 
 			// Then
-			expectArg(['get', GA_MEASUREMENT_ID_2, 'test', callback], 3);
+			expectArg(['get', MEASUREMENT_ID_2, 'test', callback], 3);
 			expectScript();
 		});
 	});
@@ -291,14 +291,14 @@ describe('@hexatool/google-analytics', () => {
 	describe('gtag()', () => {
 		it('gtag(...args: GoogleTagArguments)', () => {
 			// Given
-			ga = new GoogleAnalytics(GA_MEASUREMENT_ID);
+			ga = new GoogleAnalytics(MEASUREMENT_ID);
 			ga.initialize();
 
 			// When
 			ga.gtag('event', 'test');
 			ga.gtag('event', 'test', {
 				foo: 'bar',
-				send_to: GA_MEASUREMENT_ID_2,
+				send_to: MEASUREMENT_ID_2,
 			});
 
 			// Then
@@ -309,7 +309,7 @@ describe('@hexatool/google-analytics', () => {
 					'test',
 					{
 						foo: 'bar',
-						send_to: GA_MEASUREMENT_ID_2,
+						send_to: MEASUREMENT_ID_2,
 					},
 				],
 				3
@@ -320,7 +320,7 @@ describe('@hexatool/google-analytics', () => {
 			// Given
 			ga = new GoogleAnalytics({
 				testMode: true,
-				measurementId: GA_MEASUREMENT_ID,
+				measurementId: MEASUREMENT_ID,
 			});
 			ga.initialize();
 
@@ -348,7 +348,7 @@ describe('@hexatool/google-analytics', () => {
 			// Given
 			ga = new GoogleAnalytics({
 				testMode: true,
-				measurementId: GA_MEASUREMENT_ID,
+				measurementId: MEASUREMENT_ID,
 			});
 			ga.initialize();
 
@@ -378,7 +378,7 @@ describe('@hexatool/google-analytics', () => {
 		it('gtag(...args: GoogleTagArguments) whatever', () => {
 			// Given
 			ga = new GoogleAnalytics({
-				measurementId: GA_MEASUREMENT_ID,
+				measurementId: MEASUREMENT_ID,
 			});
 			ga.initialize();
 
@@ -400,9 +400,9 @@ describe('@hexatool/google-analytics', () => {
 			// Given
 			ga = new GoogleAnalytics({
 				measurementId: [
-					GA_MEASUREMENT_ID,
+					MEASUREMENT_ID,
 					{
-						measurementId: GA_MEASUREMENT_ID_2,
+						measurementId: MEASUREMENT_ID_2,
 						user_id: '1',
 						send_page_view: false,
 					},
@@ -414,11 +414,11 @@ describe('@hexatool/google-analytics', () => {
 
 			// Then
 			expectArg(['js', newDate]);
-			expectArg(['config', GA_MEASUREMENT_ID], 1);
+			expectArg(['config', MEASUREMENT_ID], 1);
 			expectArg(
 				[
 					'config',
-					GA_MEASUREMENT_ID_2,
+					MEASUREMENT_ID_2,
 					{
 						user_id: '1',
 						send_page_view: false,
@@ -428,7 +428,7 @@ describe('@hexatool/google-analytics', () => {
 			);
 			const exist = document.getElementById('google-tag-manager') as HTMLScriptElement;
 			expect(exist).not.toBeNull();
-			expect(exist.src).toBe(`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`);
+			expect(exist.src).toBe(`https://www.googletagmanager.com/gtag/js?id=${MEASUREMENT_ID}`);
 			expect(window.dataLayer).toBeDefined();
 			expect(window.dataLayer.length).toBe(3);
 		});
@@ -436,9 +436,9 @@ describe('@hexatool/google-analytics', () => {
 			// Given
 			ga = new GoogleAnalytics({
 				measurementId: [
-					GA_MEASUREMENT_ID,
+					MEASUREMENT_ID,
 					{
-						measurementId: GA_MEASUREMENT_ID_2,
+						measurementId: MEASUREMENT_ID_2,
 						user_id: '1',
 						send_page_view: false,
 					},
@@ -452,11 +452,11 @@ describe('@hexatool/google-analytics', () => {
 			// Then
 			expectArg(['set', 'allow_ad_personalization_signals', false]);
 			expectArg(['js', newDate], 1);
-			expectArg(['config', GA_MEASUREMENT_ID], 2);
+			expectArg(['config', MEASUREMENT_ID], 2);
 			expectArg(
 				[
 					'config',
-					GA_MEASUREMENT_ID_2,
+					MEASUREMENT_ID_2,
 					{
 						user_id: '1',
 						send_page_view: false,
@@ -466,7 +466,7 @@ describe('@hexatool/google-analytics', () => {
 			);
 			const exist = document.getElementById('google-tag-manager') as HTMLScriptElement;
 			expect(exist).not.toBeNull();
-			expect(exist.src).toBe(`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`);
+			expect(exist.src).toBe(`https://www.googletagmanager.com/gtag/js?id=${MEASUREMENT_ID}`);
 			expect(window.dataLayer).toBeDefined();
 			expect(window.dataLayer.length).toBe(4);
 		});
@@ -483,7 +483,7 @@ describe('@hexatool/google-analytics', () => {
 		});
 		it('initialize(googleTagUrl?: string, nonce?: string)', () => {
 			// Given
-			ga = new GoogleAnalytics(GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2);
+			ga = new GoogleAnalytics(MEASUREMENT_ID, MEASUREMENT_ID_2);
 
 			// When
 			ga.initialize({
@@ -496,7 +496,7 @@ describe('@hexatool/google-analytics', () => {
 			// Then
 			const exist = document.getElementById('google-tag-manager') as HTMLScriptElement;
 			expect(exist).not.toBeNull();
-			expect(exist.src).toBe(`${FAKE_GOOGLE_TAG_URL}?id=${GA_MEASUREMENT_ID}&l=customLayer`);
+			expect(exist.src).toBe(`${FAKE_GOOGLE_TAG_URL}?id=${MEASUREMENT_ID}&l=customLayer`);
 			expect(exist.attributes.getNamedItem('nonce')?.value).toBe(FAKE_NONCE);
 			expectArg(['event', 'page_view'], 3, FAKE_LAYER);
 			expectNotLayer();
@@ -506,7 +506,7 @@ describe('@hexatool/google-analytics', () => {
 	describe('set()', () => {
 		it('config(params: GoogleAnalyticsSetParams)', () => {
 			// Given
-			ga = new GoogleAnalytics(GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2);
+			ga = new GoogleAnalytics(MEASUREMENT_ID, MEASUREMENT_ID_2);
 			ga.initialize();
 
 			// When
@@ -516,22 +516,22 @@ describe('@hexatool/google-analytics', () => {
 			});
 
 			// Then
-			expectArg(['set', GA_MEASUREMENT_ID, { country: 'US', currency: 'USD' }], 3);
+			expectArg(['set', MEASUREMENT_ID, { country: 'US', currency: 'USD' }], 3);
 			expectScript();
 		});
 		it('config(measurementID: GoogleAnalyticsMeasurementId, params: GoogleAnalyticsSetParams)', () => {
 			// Given
-			ga = new GoogleAnalytics(GA_MEASUREMENT_ID, GA_MEASUREMENT_ID_2);
+			ga = new GoogleAnalytics(MEASUREMENT_ID, MEASUREMENT_ID_2);
 			ga.initialize();
 
 			// When
-			ga.set(GA_MEASUREMENT_ID_2, {
+			ga.set(MEASUREMENT_ID_2, {
 				country: 'US',
 				currency: 'USD',
 			});
 
 			// Then
-			expectArg(['set', GA_MEASUREMENT_ID_2, { country: 'US', currency: 'USD' }], 3);
+			expectArg(['set', MEASUREMENT_ID_2, { country: 'US', currency: 'USD' }], 3);
 			expectScript();
 		});
 	});

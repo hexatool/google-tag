@@ -1,5 +1,5 @@
-import assertMeasurementId from './assert/assert-google-analytics-measurement-id';
-import { isGoogleAnalyticsMeasurementId, loadGoogleAnalytics } from './fn';
+import assertMeasurementId from './assert/assert-google-tag-measurement-id.ts';
+import { isGoogleTagMeasurementId, loadGoogleAnalytics } from './fn';
 import type {
 	GoogleAnalyticsArguments,
 	GoogleAnalyticsConfigArguments,
@@ -16,25 +16,25 @@ import type {
 	GoogleAnalyticsJsArguments,
 	GoogleAnalyticsLoginEventArguments,
 	GoogleAnalyticsLoginEventParams,
-	GoogleAnalyticsMeasurementId,
 	GoogleAnalyticsPageViewEventArguments,
 	GoogleAnalyticsPageViewEventParams,
 	GoogleAnalyticsSetArguments,
 	GoogleAnalyticsSetMeasurementIdArguments,
 	GoogleAnalyticsSetParams,
+	GoogleTagMeasurementId,
 	InitializeOptions,
 } from './types';
 
 interface GoogleAnalyticsConfigParamsWithMeasurementId extends GoogleAnalyticsConfigParams {
-	measurementId: GoogleAnalyticsMeasurementId;
+	measurementId: GoogleTagMeasurementId;
 }
 
 interface GoogleAnalyticsOptions {
 	allowAdPersonalizationSignals?: false;
 	measurementId?:
-		| GoogleAnalyticsMeasurementId
+		| GoogleTagMeasurementId
 		| GoogleAnalyticsConfigParamsWithMeasurementId
-		| (GoogleAnalyticsMeasurementId | GoogleAnalyticsConfigParamsWithMeasurementId)[];
+		| (GoogleTagMeasurementId | GoogleAnalyticsConfigParamsWithMeasurementId)[];
 	testMode?: boolean;
 }
 
@@ -42,13 +42,13 @@ class GoogleAnalytics {
 	readonly #allowAdPersonalizationSignals?: false;
 	#initialize: boolean;
 	readonly #isQueuing: boolean;
-	readonly #measurementId: Map<GoogleAnalyticsMeasurementId, GoogleAnalyticsConfigParams>;
+	readonly #measurementId: Map<GoogleTagMeasurementId, GoogleAnalyticsConfigParams>;
 	readonly #queueGtag: GoogleAnalyticsArguments[];
 	#testMode: boolean;
 
-	constructor(...measurementIds: GoogleAnalyticsMeasurementId[]);
+	constructor(...measurementIds: GoogleTagMeasurementId[]);
 	constructor(options: GoogleAnalyticsOptions);
-	constructor(...args: [GoogleAnalyticsOptions | GoogleAnalyticsMeasurementId, ...GoogleAnalyticsMeasurementId[]]) {
+	constructor(...args: [GoogleAnalyticsOptions | GoogleTagMeasurementId, ...GoogleTagMeasurementId[]]) {
 		if (typeof window === 'undefined' || typeof document === 'undefined') {
 			throw new Error(`'GoogleAnalytics' is only available in the browser.`);
 		}
@@ -75,11 +75,11 @@ class GoogleAnalytics {
 		this.measurementIds.forEach(assertMeasurementId);
 	}
 
-	get defaultMeasurementId(): GoogleAnalyticsMeasurementId | undefined {
+	get defaultMeasurementId(): GoogleTagMeasurementId | undefined {
 		return this.measurementIds[0];
 	}
 
-	get measurementIds(): GoogleAnalyticsMeasurementId[] {
+	get measurementIds(): GoogleTagMeasurementId[] {
 		return Array.from(this.#measurementId.keys());
 	}
 
@@ -88,7 +88,7 @@ class GoogleAnalytics {
 	}
 
 	addMeasurementId(
-		...measurementId: (GoogleAnalyticsMeasurementId | GoogleAnalyticsConfigParamsWithMeasurementId)[]
+		...measurementId: (GoogleTagMeasurementId | GoogleAnalyticsConfigParamsWithMeasurementId)[]
 	): void {
 		for (const id of measurementId) {
 			if (typeof id === 'string' && assertMeasurementId(id)) {
@@ -101,9 +101,9 @@ class GoogleAnalytics {
 	}
 
 	config(params: GoogleAnalyticsConfigParams): void;
-	config(measurementID: GoogleAnalyticsMeasurementId, params?: GoogleAnalyticsConfigParams): void;
+	config(measurementID: GoogleTagMeasurementId, params?: GoogleAnalyticsConfigParams): void;
 	config(
-		measurementIdOrParams: GoogleAnalyticsMeasurementId | GoogleAnalyticsConfigParams,
+		measurementIdOrParams: GoogleTagMeasurementId | GoogleAnalyticsConfigParams,
 		params?: GoogleAnalyticsConfigParams
 	): void {
 		if (typeof measurementIdOrParams === 'string') {
@@ -138,13 +138,13 @@ class GoogleAnalytics {
 	}
 
 	get(field: string, callback: GoogleAnalyticsGetCallback): void;
-	get(measurementID: GoogleAnalyticsMeasurementId, field: string, callback: GoogleAnalyticsGetCallback): void;
+	get(measurementID: GoogleTagMeasurementId, field: string, callback: GoogleAnalyticsGetCallback): void;
 	get(
 		fieldOrMeasurementID: string,
 		fieldOrCallBack: string | GoogleAnalyticsGetCallback,
 		callback?: GoogleAnalyticsGetCallback
 	): void {
-		if (isGoogleAnalyticsMeasurementId(fieldOrMeasurementID) && typeof fieldOrCallBack === 'string' && callback) {
+		if (isGoogleTagMeasurementId(fieldOrMeasurementID) && typeof fieldOrCallBack === 'string' && callback) {
 			this.gtag('get', fieldOrMeasurementID, fieldOrCallBack, callback);
 		} else if (
 			this.defaultMeasurementId &&
@@ -200,10 +200,10 @@ class GoogleAnalytics {
 
 	set(params: GoogleAnalyticsSetParams): void;
 
-	set(measurementID: GoogleAnalyticsMeasurementId, params: GoogleAnalyticsSetParams): void;
+	set(measurementID: GoogleTagMeasurementId, params: GoogleAnalyticsSetParams): void;
 
 	set(
-		measurementIdOrParams: GoogleAnalyticsMeasurementId | GoogleAnalyticsSetParams,
+		measurementIdOrParams: GoogleTagMeasurementId | GoogleAnalyticsSetParams,
 		params?: GoogleAnalyticsSetParams
 	): void {
 		if (typeof measurementIdOrParams === 'string' && params) {

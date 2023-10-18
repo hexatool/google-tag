@@ -1,4 +1,4 @@
-import type { GoogleAnalyticsMeasurementId } from './measurement-id';
+import type { GoogleTagMeasurementId } from './measurement-id';
 import type { GoogleAnalyticsCommonParams, GoogleAnalyticsParamsPrimitives } from './params';
 
 interface GoogleAnalyticsSetParams extends GoogleAnalyticsCommonParams {
@@ -8,7 +8,7 @@ interface GoogleAnalyticsSetParams extends GoogleAnalyticsCommonParams {
 	send_page_view?: boolean;
 }
 
-type GoogleAnalyticsSetMeasurementIdArguments = ['set', GoogleAnalyticsMeasurementId, GoogleAnalyticsSetParams];
+type GoogleAnalyticsSetMeasurementIdArguments = ['set', GoogleTagMeasurementId, GoogleAnalyticsSetParams];
 type GoogleAnalyticsSetArguments = ['set', string, GoogleAnalyticsParamsPrimitives];
 
 export type { GoogleAnalyticsSetArguments, GoogleAnalyticsSetMeasurementIdArguments, GoogleAnalyticsSetParams };

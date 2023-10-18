@@ -1,4 +1,4 @@
-import isGoogleAnalyticsMeasurementId from './is-google-analytics-measurement-id';
+import isGoogleTagMeasurementId from './is-google-tag-measurement-id.ts';
 import loadGoogleAnalytics from './load-google-tag';
 
-export { isGoogleAnalyticsMeasurementId, loadGoogleAnalytics };
+export { isGoogleTagMeasurementId, loadGoogleAnalytics };

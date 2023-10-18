@@ -1,9 +1,9 @@
-import type { GoogleAnalyticsMeasurementId } from '../types';
+import type { GoogleTagMeasurementId } from '../types';
 
 const DEFAULT_GOOGLE_TAG_URL = 'https://www.googletagmanager.com/gtag/js';
 
 export default function loadGoogleAnalytics(
-	measurementID: GoogleAnalyticsMeasurementId,
+	measurementID: GoogleTagMeasurementId,
 	googleTagUrl = DEFAULT_GOOGLE_TAG_URL,
 	nonce?: string,
 	layer = 'dataLayer'

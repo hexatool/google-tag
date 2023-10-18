@@ -1,5 +1,5 @@
 import type { GoogleAnalyticsArgumentsTyped } from './arguments';
-import type { GoogleAnalyticsMeasurementId } from './measurement-id';
+import type { GoogleTagMeasurementId } from './measurement-id';
 import type { GoogleAnalyticsCommonParams } from './params';
 
 interface GoogleAnalyticsConfigParams extends GoogleAnalyticsCommonParams {
@@ -18,7 +18,7 @@ interface GoogleAnalyticsConfigParams extends GoogleAnalyticsCommonParams {
 
 type GoogleAnalyticsConfigArguments = GoogleAnalyticsArgumentsTyped<
 	'config',
-	GoogleAnalyticsMeasurementId,
+	GoogleTagMeasurementId,
 	GoogleAnalyticsConfigParams
 >;
 

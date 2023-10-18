@@ -2,19 +2,19 @@ import { useEffect } from 'react';
 
 import type { GoogleAnalyticsOptions } from './google-analytics';
 import GoogleAnalytics from './google-analytics';
-import type { GoogleAnalyticsMeasurementId, InitializeOptions } from './types';
+import type { GoogleTagMeasurementId, InitializeOptions } from './types';
 
 interface GoogleAnalyticsHookOptions extends GoogleAnalyticsOptions, InitializeOptions {
 	initialize?: boolean;
 }
 
-function useGoogleAnalytics(...measurementIds: GoogleAnalyticsMeasurementId[]): GoogleAnalytics;
+function useGoogleAnalytics(...measurementIds: GoogleTagMeasurementId[]): GoogleAnalytics;
 function useGoogleAnalytics(options: GoogleAnalyticsHookOptions): GoogleAnalytics;
 function useGoogleAnalytics(
-	...args: [GoogleAnalyticsHookOptions | GoogleAnalyticsMeasurementId, ...GoogleAnalyticsMeasurementId[]]
+	...args: [GoogleAnalyticsHookOptions | GoogleTagMeasurementId, ...GoogleTagMeasurementId[]]
 ): GoogleAnalytics;
 function useGoogleAnalytics(
-	...args: [GoogleAnalyticsHookOptions | GoogleAnalyticsMeasurementId, ...GoogleAnalyticsMeasurementId[]]
+	...args: [GoogleAnalyticsHookOptions | GoogleTagMeasurementId, ...GoogleTagMeasurementId[]]
 ): GoogleAnalytics {
 	const [first, ...rest] = args;
 	let ga: GoogleAnalytics;
