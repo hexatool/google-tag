@@ -64,5 +64,4 @@ jobs:
                     title: 'chore: release'
                     setupGitUser: false
                 env:
-                    YARN_ENABLE_IMMUTABLE_INSTALLS: false
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
