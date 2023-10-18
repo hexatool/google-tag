@@ -1,5 +1,3 @@
-import assertMeasurementId from './assert/assert-google-tag-measurement-id.ts';
-import { isGoogleTagMeasurementId, loadGoogleAnalytics } from './fn';
 import type {
 	GoogleAnalyticsArguments,
 	GoogleAnalyticsConfigArguments,
@@ -38,6 +36,9 @@ interface GoogleAnalyticsOptions {
 	testMode?: boolean;
 }
 
+const GOOGLE_TAG_MEASUREMENT_ID_REGEXP = /^(?:G|GT|AW|DC)-[A-Z0-9]{10}$/;
+const DEFAULT_GOOGLE_TAG_URL = 'https://www.googletagmanager.com/gtag/js';
+
 class GoogleAnalytics {
 	readonly #allowAdPersonalizationSignals?: false;
 	#initialize: boolean;
@@ -72,7 +73,9 @@ class GoogleAnalytics {
 				this.addMeasurementId(...measurementId);
 			}
 		}
-		this.measurementIds.forEach(assertMeasurementId);
+		this.measurementIds.forEach(v => {
+			this.#assertMeasurementId(v);
+		});
 	}
 
 	get defaultMeasurementId(): GoogleTagMeasurementId | undefined {
@@ -91,9 +94,9 @@ class GoogleAnalytics {
 		...measurementId: (GoogleTagMeasurementId | GoogleAnalyticsConfigParamsWithMeasurementId)[]
 	): void {
 		for (const id of measurementId) {
-			if (typeof id === 'string' && assertMeasurementId(id)) {
+			if (typeof id === 'string' && this.#assertMeasurementId(id)) {
 				this.#measurementId.set(id, {});
-			} else if (typeof id === 'object' && assertMeasurementId(id.measurementId)) {
+			} else if (typeof id === 'object' && this.#assertMeasurementId(id.measurementId)) {
 				const { measurementId: _, ...rest } = id;
 				this.#measurementId.set(id.measurementId, rest);
 			}
@@ -144,7 +147,7 @@ class GoogleAnalytics {
 		fieldOrCallBack: string | GoogleAnalyticsGetCallback,
 		callback?: GoogleAnalyticsGetCallback
 	): void {
-		if (isGoogleTagMeasurementId(fieldOrMeasurementID) && typeof fieldOrCallBack === 'string' && callback) {
+		if (this.#isGoogleTagMeasurementId(fieldOrMeasurementID) && typeof fieldOrCallBack === 'string' && callback) {
 			this.gtag('get', fieldOrMeasurementID, fieldOrCallBack, callback);
 		} else if (
 			this.defaultMeasurementId &&
@@ -187,7 +190,7 @@ class GoogleAnalytics {
 		if (!defaultMeasurementId) {
 			throw new Error('No Google Analytics Measurement ID provided.');
 		}
-		loadGoogleAnalytics(defaultMeasurementId, googleTagUrl, nonce, layer);
+		this.#loadGoogleAnalytics(defaultMeasurementId, googleTagUrl, nonce, layer);
 		this.#initialize = true;
 		if (this.#allowAdPersonalizationSignals === false) {
 			this.gtag('set', 'allow_ad_personalization_signals', false);
@@ -216,6 +219,14 @@ class GoogleAnalytics {
 	setTestMode(testMode: boolean): void {
 		this.#testMode = testMode;
 		this.#flushQueue();
+	}
+
+	#assertMeasurementId(value: unknown): value is GoogleTagMeasurementId {
+		if (!this.#isGoogleTagMeasurementId(value)) {
+			throw new TypeError(`Invalid Google Tag Measurement Id format. Expected '[G|GT|AW|DC]-XXXXXXXXXX'.`);
+		}
+
+		return true;
 	}
 
 	#flushQueue(): void {
@@ -250,6 +261,48 @@ class GoogleAnalytics {
 			return;
 		}
 		window.gtag(...args);
+	}
+
+	#isGoogleTagMeasurementId(value: unknown): value is GoogleTagMeasurementId {
+		if (typeof value !== 'string') {
+			return false;
+		}
+
+		return GOOGLE_TAG_MEASUREMENT_ID_REGEXP.test(value);
+	}
+
+	#loadGoogleAnalytics(
+		measurementID: GoogleTagMeasurementId,
+		googleTagUrl = DEFAULT_GOOGLE_TAG_URL,
+		nonce?: string,
+		layer = 'dataLayer'
+	): void {
+		const exist = document.getElementById('google-tag-manager');
+		if (exist) {
+			return;
+		}
+		const script = document.createElement('script');
+		script.async = true;
+		script.id = 'google-tag-manager';
+		script.src = `${googleTagUrl}?id=${measurementID}${layer === 'dataLayer' ? '' : `&l=${layer}`}`;
+		if (nonce) {
+			script.setAttribute('nonce', nonce);
+		}
+		document.head.appendChild(script);
+
+		// @ts-expect-error Custom dataLayer
+		if (!(layer in window) || typeof window[layer] === 'undefined') {
+			// @ts-expect-error Custom dataLayer
+			window[layer] = [];
+		}
+
+		if (!('gtag' in window) || typeof window.gtag === 'undefined') {
+			window.gtag = function gtag(...args: unknown[]) {
+				// @ts-expect-error Custom dataLayer
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
+				window[layer].push(args);
+			};
+		}
 	}
 }
 
