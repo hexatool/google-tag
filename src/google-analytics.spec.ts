@@ -1,12 +1,11 @@
-// @vitest-environment happy-dom
-
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { GlobalRegistrator } from '@happy-dom/global-registrator';
+import { beforeAll, beforeEach, describe, expect, it, setSystemTime } from 'bun:test';
 
 import GoogleAnalytics from './google-analytics';
 import type { GoogleAnalyticsArguments, GoogleAnalyticsParamsPrimitives } from './types';
 
 const newDate = new Date('2020-01-01');
-vi.setSystemTime(newDate);
+setSystemTime(newDate);
 
 describe('@hexatool/google-analytics', () => {
 	let ga: GoogleAnalytics;
@@ -48,6 +47,9 @@ describe('@hexatool/google-analytics', () => {
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call
 		expect(window[layer].at(index)).toStrictEqual(arg);
 	}
+	beforeAll(() => {
+		GlobalRegistrator.register();
+	});
 
 	beforeEach(() => {
 		document.getElementById('google-tag-manager')?.remove();

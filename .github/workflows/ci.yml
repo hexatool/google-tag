@@ -18,19 +18,17 @@ jobs:
             -   name: Checkout
                 uses: actions/checkout@v4
 
-            -   name: Setup Node
-                uses: actions/setup-node@v3
-                with:
-                    node-version-file: 'package.json'
+            -   name: Setup bun
+                uses: oven-sh/setup-bun@v1
 
             -   name: Install dependencies
-                run: yarn install --immutable
+                run: bun install
 
             -   name: Lint
-                run: yarn lint
+                run: bun lint
 
             -   name: Type check
-                run: yarn typecheck
+                run: bun typecheck
 
     release:
         name: Release
@@ -46,23 +44,11 @@ jobs:
             -   name: Checkout
                 uses: actions/checkout@v4
 
-            -   name: Setup Node
-                uses: actions/setup-node@v3
-                with:
-                    node-version-file: 'package.json'
+            -   name: Setup bun
+                uses: oven-sh/setup-bun@v1
 
             -   name: Install dependencies
-                run: yarn install
-                env:
-                    NPM_TOKEN: ${{ steps.auth.outputs.access_token }}
-
-            -   name: Authorize Google Cloud SDK
-                id: auth
-                uses: google-github-actions/auth@v1
-                with:
-                    token_format: access_token
-                    workload_identity_provider: ${{ secrets.MAGNUS_STRATEGY_WORKLOAD_IDENTITY_PROVIDER}}
-                    service_account: ${{ secrets.MAGNUS_STRATEGY_SERVICE_ACCOUNT}}
+                run: bun install
 
             -   name: Configure Git User
                 run: |
@@ -72,12 +58,11 @@ jobs:
             -   name: Create Release Pull Request or Publish to npm
                 uses: changesets/action@v1
                 with:
-                    publish: yarn publish
-                    version: yarn version
+                    publish: bun publish
+                    version: bun version
                     commit: 'chore: release'
                     title: 'chore: release'
                     setupGitUser: false
                 env:
-                    NPM_TOKEN: ${{ steps.auth.outputs.access_token }}
                     YARN_ENABLE_IMMUTABLE_INSTALLS: false
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

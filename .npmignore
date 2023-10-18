@@ -1,15 +1,11 @@
 .changeset
 .github
 .idea
-.yarn
 test
 src
-.editorconfig
 .eslintignore
 .eslintrc.json
-.yarnrc.yml
-babel.config.js
+bun.lockb
 renovate.json
 tsconfig.json
 vite.config.ts
-yarn.lock
