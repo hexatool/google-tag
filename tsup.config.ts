@@ -3,7 +3,7 @@ import { defineConfig } from 'tsup';
 
 export default defineConfig([
 	{
-		format: ['esm'],
+		format: ['esm', 'cjs'],
 		dts: true,
 		clean: true,
 		entry: {
@@ -19,8 +19,8 @@ export default defineConfig([
 			'google-analytics': './src/index.ts',
 			'google-analytics-react': './src/react.ts',
 		},
-		outExtension: ({ format }) => ({
-			js: `.${format === 'esm' ? '' : format}.min.js`,
+		outExtension: () => ({
+			js: `.umd.min.js`,
 		}),
 		esbuildPlugins: [umd({ libraryName: 'GA' })],
 	},

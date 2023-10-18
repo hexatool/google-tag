@@ -8,18 +8,12 @@ interface GoogleAnalyticsHookOptions extends GoogleAnalyticsOptions, InitializeO
 	initialize?: boolean;
 }
 
-export type { GoogleAnalyticsHookOptions };
-
-export { GoogleAnalytics };
-
-export * from './index';
-
-export default function useGoogleAnalytics(...measurementIds: GoogleAnalyticsMeasurementId[]): GoogleAnalytics;
-export default function useGoogleAnalytics(options: GoogleAnalyticsHookOptions): GoogleAnalytics;
-export default function useGoogleAnalytics(
+function useGoogleAnalytics(...measurementIds: GoogleAnalyticsMeasurementId[]): GoogleAnalytics;
+function useGoogleAnalytics(options: GoogleAnalyticsHookOptions): GoogleAnalytics;
+function useGoogleAnalytics(
 	...args: [GoogleAnalyticsHookOptions | GoogleAnalyticsMeasurementId, ...GoogleAnalyticsMeasurementId[]]
 ): GoogleAnalytics;
-export default function useGoogleAnalytics(
+function useGoogleAnalytics(
 	...args: [GoogleAnalyticsHookOptions | GoogleAnalyticsMeasurementId, ...GoogleAnalyticsMeasurementId[]]
 ): GoogleAnalytics {
 	const [first, ...rest] = args;
@@ -43,3 +37,8 @@ export default function useGoogleAnalytics(
 
 	return ga;
 }
+
+export type { GoogleAnalyticsHookOptions };
+
+export * from './index';
+export { useGoogleAnalytics };

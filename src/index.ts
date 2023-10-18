@@ -5,4 +5,4 @@ export * from './types';
 
 export type { GoogleAnalyticsOptions };
 
-export default GoogleAnalytics;
+export { GoogleAnalytics };

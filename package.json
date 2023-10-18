@@ -23,17 +23,39 @@
 		"dist"
 	],
 	"type": "module",
-	"main": "./dist/google-analytics.js",
-	"umd:main": "./dist/google-analytics.umd.min.js",
+	"main": "./dist/google-analytics.cjs",
+	"module": "./dist/google-analytics.js",
 	"types": "./dist/google-analytics.d.ts",
 	"exports": {
 		".": {
-			"import": "./dist/google-analytics.js",
-			"types": "./dist/google-analytics.d.ts"
+			"require": {
+				"types": "./dist/google-analytics.d.cts",
+				"default": "./dist/google-analytics.cjs"
+			},
+			"import": {
+				"types": "./dist/google-analytics.d.ts",
+				"default": "./dist/google-analytics.js"
+			}
 		},
 		"./react": {
-			"import": "./dist/google-analytics-react.js",
-			"types": "./dist/google-analytics-react.d.ts"
+			"require": {
+				"types": "./dist/google-analytics-react.d.cts",
+				"default": "./dist/google-analytics-react.cjs"
+			},
+			"import": {
+				"types": "./dist/google-analytics-react.d.ts",
+				"default": "./dist/google-analytics-react.js"
+			}
+		}
+	},
+	"typesVersions": {
+		"*": {
+			"*": [
+				"./dist/google-analytics.d.ts"
+			],
+			"./react": [
+				"./dist/google-analytics-react.d.ts"
+			]
 		}
 	},
 	"scripts": {
