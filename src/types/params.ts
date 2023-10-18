@@ -1,26 +1,26 @@
-import type { GoogleAnalyticsMeasurementId } from './measurement-id';
+import type { GoogleTagMeasurementId } from './measurement-id';
 
-type GoogleAnalyticsParamsPrimitives = string | number | boolean | undefined | null;
-type GoogleAnalyticsParamsPrimitivesWithCallback = GoogleAnalyticsParamsPrimitives | ((...args: unknown[]) => void);
+type GoogleTagParamsPrimitives = string | number | boolean | undefined | null;
+type GoogleTagParamsPrimitivesWithCallback = GoogleTagParamsPrimitives | ((...args: unknown[]) => void);
 
-type GoogleAnalyticsParams = Record<string, GoogleAnalyticsParamsPrimitives | GoogleAnalyticsParamsPrimitives[]>;
+type GoogleTagParams = Record<string, GoogleTagParamsPrimitives | GoogleTagParamsPrimitives[]>;
 
-type GoogleAnalyticsParamsWithCallback = Record<
+type GoogleTagParamsWithCallback = Record<
 	string,
-	GoogleAnalyticsParamsPrimitivesWithCallback | GoogleAnalyticsParamsPrimitivesWithCallback[]
+	GoogleTagParamsPrimitivesWithCallback | GoogleTagParamsPrimitivesWithCallback[]
 >;
 
-interface GoogleAnalyticsCommonParams extends GoogleAnalyticsParamsWithCallback {
+interface GoogleTagCommonParams extends GoogleTagParamsWithCallback {
 	event_callback?: () => void;
 	event_timeout?: number;
 	groups?: string | string[];
-	send_to?: GoogleAnalyticsMeasurementId | GoogleAnalyticsMeasurementId[];
+	send_to?: GoogleTagMeasurementId | GoogleTagMeasurementId[];
 }
 
 export type {
-	GoogleAnalyticsCommonParams,
-	GoogleAnalyticsParams,
-	GoogleAnalyticsParamsPrimitives,
-	GoogleAnalyticsParamsPrimitivesWithCallback,
-	GoogleAnalyticsParamsWithCallback,
+	GoogleTagCommonParams,
+	GoogleTagParams,
+	GoogleTagParamsPrimitives,
+	GoogleTagParamsPrimitivesWithCallback,
+	GoogleTagParamsWithCallback,
 };

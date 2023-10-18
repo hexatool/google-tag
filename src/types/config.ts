@@ -1,8 +1,8 @@
-import type { GoogleAnalyticsArgumentsTyped } from './arguments';
-import type { GoogleAnalyticsMeasurementId } from './measurement-id';
-import type { GoogleAnalyticsCommonParams } from './params';
+import type { GoogleTagArgumentsTyped } from './arguments';
+import type { GoogleTagMeasurementId } from './measurement-id';
+import type { GoogleTagCommonParams } from './params';
 
-interface GoogleAnalyticsConfigParams extends GoogleAnalyticsCommonParams {
+interface GoogleTagConfigParams extends GoogleTagCommonParams {
 	allow_ad_personalization_signals?: boolean;
 	allow_google_signals?: boolean;
 	cookie_domain?: string;
@@ -16,10 +16,6 @@ interface GoogleAnalyticsConfigParams extends GoogleAnalyticsCommonParams {
 	user_id?: string;
 }
 
-type GoogleAnalyticsConfigArguments = GoogleAnalyticsArgumentsTyped<
-	'config',
-	GoogleAnalyticsMeasurementId,
-	GoogleAnalyticsConfigParams
->;
+type GoogleTagConfigArguments = GoogleTagArgumentsTyped<'config', GoogleTagMeasurementId, GoogleTagConfigParams>;
 
-export type { GoogleAnalyticsConfigArguments, GoogleAnalyticsConfigParams };
+export type { GoogleTagConfigArguments, GoogleTagConfigParams };

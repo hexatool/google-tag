@@ -1,60 +1,64 @@
 {
-	"name": "@hexatool/google-analytics",
+	"name": "@hexatool/google-tag",
 	"version": "0.0.0",
 	"author": "Hexatool",
-	"description": "Google Analytics 4 library",
+	"description": "Google tag library",
 	"keywords": [
-		"analytics",
+		"gtag",
 		"google",
-		"google analytics",
-		"google analytics 4",
-		"universal analytics"
+		"analytics",
+		"Google Analytics",
+		"Google Analytics 4",
+		"Universal Analytics",
+		"Google Ads",
+		"Google Floodlight"
 	],
-	"homepage": "https://github.com/hexatool/google-analytics",
+	"homepage": "https://github.com/hexatool/google-tag",
 	"bugs": {
-		"url": "https://github.com/hexatool/google-analytics/issues"
+		"url": "https://github.com/hexatool/google-tag/issues"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+ssh://git@github.com/hexatool/google-analytics.git"
+		"url": "git+ssh://git@github.com/hexatool/google-tag.git"
 	},
 	"license": "MIT",
 	"files": [
 		"dist"
 	],
 	"type": "module",
-	"main": "./dist/google-analytics.cjs",
-	"module": "./dist/google-analytics.js",
-	"types": "./dist/google-analytics.d.ts",
+	"main": "./dist/google-tag.cjs",
+	"module": "./dist/google-tag.js",
+	"types": "./dist/google-tag.d.ts",
+	"sideEffects": false,
 	"exports": {
 		".": {
 			"require": {
-				"types": "./dist/google-analytics.d.cts",
-				"default": "./dist/google-analytics.cjs"
+				"types": "./dist/google-tag.d.cts",
+				"default": "./dist/google-tag.cjs"
 			},
 			"import": {
-				"types": "./dist/google-analytics.d.ts",
-				"default": "./dist/google-analytics.js"
+				"types": "./dist/google-tag.d.ts",
+				"default": "./dist/google-tag.js"
 			}
 		},
 		"./react": {
 			"require": {
-				"types": "./dist/google-analytics-react.d.cts",
-				"default": "./dist/google-analytics-react.cjs"
+				"types": "./dist/google-tag-react.d.cts",
+				"default": "./dist/google-tag-react.cjs"
 			},
 			"import": {
-				"types": "./dist/google-analytics-react.d.ts",
-				"default": "./dist/google-analytics-react.js"
+				"types": "./dist/google-tag-react.d.ts",
+				"default": "./dist/google-tag-react.js"
 			}
 		}
 	},
 	"typesVersions": {
 		"*": {
 			"*": [
-				"./dist/google-analytics.d.ts"
+				"./dist/google-tag.d.ts"
 			],
 			"./react": [
-				"./dist/google-analytics-react.d.ts"
+				"./dist/google-tag-react.d.ts"
 			]
 		}
 	},

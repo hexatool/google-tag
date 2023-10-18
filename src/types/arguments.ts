@@ -1,6 +1,6 @@
-import type { GoogleAnalyticsCommand } from './command';
+import type { GoogleTagCommand } from './command';
 
-export type GoogleAnalyticsArgumentsTyped<Command extends GoogleAnalyticsCommand, EventName extends string, Params> = [
+export type GoogleTagArgumentsTyped<Command extends GoogleTagCommand, EventName extends string, Params> = [
 	Command,
 	EventName,
 	Params?,

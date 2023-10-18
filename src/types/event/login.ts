@@ -1,14 +1,10 @@
-import type { GoogleAnalyticsArgumentsTyped } from '../arguments';
-import type { GoogleAnalyticsEventCommonParams } from './params';
+import type { GoogleTagArgumentsTyped } from '../arguments';
+import type { GoogleTagEventCommonParams } from './params';
 
-interface GoogleAnalyticsLoginEventParams extends GoogleAnalyticsEventCommonParams {
+interface GoogleTagLoginEventParams extends GoogleTagEventCommonParams {
 	method?: string;
 }
 
-type GoogleAnalyticsLoginEventArguments = GoogleAnalyticsArgumentsTyped<
-	'event',
-	'login',
-	GoogleAnalyticsLoginEventParams
->;
+type GoogleTagLoginEventArguments = GoogleTagArgumentsTyped<'event', 'login', GoogleTagLoginEventParams>;
 
-export type { GoogleAnalyticsLoginEventArguments, GoogleAnalyticsLoginEventParams };
+export type { GoogleTagLoginEventArguments, GoogleTagLoginEventParams };

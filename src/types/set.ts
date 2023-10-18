@@ -1,14 +1,14 @@
-import type { GoogleAnalyticsMeasurementId } from './measurement-id';
-import type { GoogleAnalyticsCommonParams, GoogleAnalyticsParamsPrimitives } from './params';
+import type { GoogleTagMeasurementId } from './measurement-id';
+import type { GoogleTagCommonParams, GoogleTagParamsPrimitives } from './params';
 
-interface GoogleAnalyticsSetParams extends GoogleAnalyticsCommonParams {
+interface GoogleTagSetParams extends GoogleTagCommonParams {
 	allow_ad_personalization_signals?: boolean;
 	allow_google_signals?: boolean;
 	restricted_data_processing?: boolean;
 	send_page_view?: boolean;
 }
 
-type GoogleAnalyticsSetMeasurementIdArguments = ['set', GoogleAnalyticsMeasurementId, GoogleAnalyticsSetParams];
-type GoogleAnalyticsSetArguments = ['set', string, GoogleAnalyticsParamsPrimitives];
+type GoogleTagSetMeasurementIdArguments = ['set', GoogleTagMeasurementId, GoogleTagSetParams];
+type GoogleTagSetArguments = ['set', string, GoogleTagParamsPrimitives];
 
-export type { GoogleAnalyticsSetArguments, GoogleAnalyticsSetMeasurementIdArguments, GoogleAnalyticsSetParams };
+export type { GoogleTagSetArguments, GoogleTagSetMeasurementIdArguments, GoogleTagSetParams };

@@ -9,13 +9,13 @@
 ## Installation
 
 ```bash
-npm install --save @hexatool/google-analytics
+npm install --save @hexatool/google-tag
 ```
 
 **Using yarn**
 
 ```bash
-yarn add @hexatool/google-analytics
+yarn add @hexatool/google-tag
 ```
 
 ## What it does

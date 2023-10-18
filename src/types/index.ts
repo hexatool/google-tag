@@ -1,26 +1,26 @@
-import type { GoogleAnalyticsConfigArguments } from './config';
-import type { GoogleAnalyticsConsentArguments } from './consent';
+import type { GoogleTagConfigArguments } from './config';
+import type { GoogleTagConsentArguments } from './consent';
 import type {
-	GoogleAnalyticsCustomEventArguments,
-	GoogleAnalyticsExceptionEventArguments,
-	GoogleAnalyticsLoginEventArguments,
-	GoogleAnalyticsPageViewEventArguments,
+	GoogleTagCustomEventArguments,
+	GoogleTagExceptionEventArguments,
+	GoogleTagLoginEventArguments,
+	GoogleTagPageViewEventArguments,
 } from './event';
-import type { GoogleAnalyticsGetArguments } from './get';
-import type { GoogleAnalyticsJsArguments } from './js';
-import type { GoogleAnalyticsSetArguments, GoogleAnalyticsSetMeasurementIdArguments } from './set';
+import type { GoogleTagGetArguments } from './get';
+import type { GoogleTagJsArguments } from './js';
+import type { GoogleTagSetArguments, GoogleTagSetMeasurementIdArguments } from './set';
 
-export type GoogleAnalyticsArguments =
-	| GoogleAnalyticsJsArguments
-	| GoogleAnalyticsSetArguments
-	| GoogleAnalyticsSetMeasurementIdArguments
-	| GoogleAnalyticsConsentArguments
-	| GoogleAnalyticsGetArguments
-	| GoogleAnalyticsConfigArguments
-	| GoogleAnalyticsCustomEventArguments
-	| GoogleAnalyticsPageViewEventArguments
-	| GoogleAnalyticsLoginEventArguments
-	| GoogleAnalyticsExceptionEventArguments;
+export type GoogleTagArguments =
+	| GoogleTagJsArguments
+	| GoogleTagSetArguments
+	| GoogleTagSetMeasurementIdArguments
+	| GoogleTagConsentArguments
+	| GoogleTagGetArguments
+	| GoogleTagConfigArguments
+	| GoogleTagCustomEventArguments
+	| GoogleTagPageViewEventArguments
+	| GoogleTagLoginEventArguments
+	| GoogleTagExceptionEventArguments;
 
 export * from './arguments';
 export * from './command';

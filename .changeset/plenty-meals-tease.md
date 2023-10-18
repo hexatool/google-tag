@@ -1,5 +1,5 @@
 ---
-"@hexatool/google-analytics": patch
+"@hexatool/google-tag": patch
 ---
 
 Initial release

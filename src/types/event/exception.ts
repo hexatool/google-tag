@@ -1,15 +1,11 @@
-import type { GoogleAnalyticsArgumentsTyped } from '../arguments';
-import type { GoogleAnalyticsEventCommonParams } from './params';
+import type { GoogleTagArgumentsTyped } from '../arguments';
+import type { GoogleTagEventCommonParams } from './params';
 
-interface GoogleAnalyticsExceptionEventParams extends GoogleAnalyticsEventCommonParams {
+interface GoogleTagExceptionEventParams extends GoogleTagEventCommonParams {
 	description?: string;
 	fatal?: boolean;
 }
 
-type GoogleAnalyticsExceptionEventArguments = GoogleAnalyticsArgumentsTyped<
-	'event',
-	'exception',
-	GoogleAnalyticsExceptionEventParams
->;
+type GoogleTagExceptionEventArguments = GoogleTagArgumentsTyped<'event', 'exception', GoogleTagExceptionEventParams>;
 
-export type { GoogleAnalyticsExceptionEventArguments, GoogleAnalyticsExceptionEventParams };
+export type { GoogleTagExceptionEventArguments, GoogleTagExceptionEventParams };

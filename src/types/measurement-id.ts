@@ -1,1 +1,1 @@
-export type GoogleAnalyticsMeasurementId = `G-${string}`;
+export type GoogleTagMeasurementId = `G-${string}` | `GT-${string}` | `AW-${string}` | `DC-${string}`;
