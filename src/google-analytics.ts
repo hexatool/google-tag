@@ -238,4 +238,6 @@ class GoogleAnalytics {
 	}
 }
 
+export type { GoogleAnalyticsOptions };
+
 export default GoogleAnalytics;

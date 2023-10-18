@@ -8,6 +8,7 @@ export default defineConfig([
 		clean: true,
 		entry: {
 			'google-analytics': './src/index.ts',
+			'google-analytics-react': './src/react.ts',
 		},
 	},
 	{
@@ -16,6 +17,7 @@ export default defineConfig([
 		minify: true,
 		entry: {
 			'google-analytics': './src/index.ts',
+			'google-analytics-react': './src/react.ts',
 		},
 		outExtension: ({ format }) => ({
 			js: `.${format === 'esm' ? '' : format}.min.js`,
