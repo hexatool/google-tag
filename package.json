@@ -4,11 +4,14 @@
 	"author": "Hexatool",
 	"description": "Google Analytics 4 library",
 	"keywords": [
-		"analytics",
+		"gtag",
 		"google",
-		"google analytics",
-		"google analytics 4",
-		"universal analytics"
+		"analytics",
+		"Google Analytics",
+		"Google Analytics 4",
+		"Universal Analytics",
+		"Google Ads",
+		"Google Floodlight"
 	],
 	"homepage": "https://github.com/hexatool/google-analytics",
 	"bugs": {
