@@ -84,3 +84,4 @@ jobs:
                     setupGitUser: false
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                    NPM_TOKEN: ${{ secrets.HEXATOOL_NPM_TOKEN }}
