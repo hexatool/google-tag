@@ -26,6 +26,11 @@ describe('@hexatool/google-tag', () => {
 		expect(exist).not.toBeNull();
 	}
 
+	function expectLayer(layer: string) {
+		// @ts-expect-error Testing dataLayer
+		expect(window[layer]).toBeDefined();
+	}
+
 	function expectNotLayer() {
 		expect(window.dataLayer).toBeUndefined();
 	}
@@ -35,7 +40,12 @@ describe('@hexatool/google-tag', () => {
 		expect(window.dataLayer.length).toBe(0);
 	}
 
-	function expectNotInit() {
+	function expectNotInit(dataLayer = 'dataLayer') {
+		expectLayer(dataLayer);
+		expectNotScript();
+	}
+
+	function expectNotInitWithNoLayer() {
 		expectNotLayer();
 		expectNotScript();
 	}
@@ -91,7 +101,7 @@ describe('@hexatool/google-tag', () => {
 			expect(fn).toThrow(`Invalid Google Tag Measurement Id format. Expected '[G|GT|AW|DC]-XXXXXXXXXX'.`);
 
 			// Then
-			expectNotInit();
+			expectNotInitWithNoLayer();
 		});
 		it('new GoogleTag(options: GoogleTagOptions)', () => {
 			// When
@@ -483,13 +493,15 @@ describe('@hexatool/google-tag', () => {
 		});
 		it('initialize(googleTagUrl?: string, nonce?: string)', () => {
 			// Given
-			gtag = new GoogleTag(MEASUREMENT_ID, MEASUREMENT_ID_2);
+			gtag = new GoogleTag({
+				measurementId: [MEASUREMENT_ID, MEASUREMENT_ID_2],
+				layer: FAKE_LAYER,
+			});
 
 			// When
 			gtag.initialize({
 				googleTagUrl: FAKE_GOOGLE_TAG_URL,
 				nonce: FAKE_NONCE,
-				layer: FAKE_LAYER,
 			});
 			gtag.event('page_view');
 

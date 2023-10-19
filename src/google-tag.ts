@@ -29,6 +29,7 @@ interface GoogleTagConfigParamsWithMeasurementId extends GoogleTagConfigParams {
 
 interface GoogleTagOptions {
 	allowAdPersonalizationSignals?: false;
+	layer?: string;
 	measurementId?:
 		| GoogleTagMeasurementId
 		| GoogleTagConfigParamsWithMeasurementId
@@ -38,9 +39,11 @@ interface GoogleTagOptions {
 
 const GOOGLE_TAG_MEASUREMENT_ID_REGEXP = /^(?:G|GT|AW|DC)-[A-Z0-9]{10}$/;
 const DEFAULT_GOOGLE_TAG_URL = 'https://www.googletagmanager.com/gtag/js';
+const DEFAULT_GOOGLE_TAG_DATA_LAYER = 'dataLayer';
 
 class GoogleTag {
 	readonly #allowAdPersonalizationSignals?: false;
+	#dataLayer: string;
 	#initialize: boolean;
 	readonly #isQueuing: boolean;
 	readonly #measurementId: Map<GoogleTagMeasurementId, GoogleTagConfigParams>;
@@ -59,14 +62,21 @@ class GoogleTag {
 		this.#testMode = false;
 		this.#isQueuing = false;
 		this.#initialize = false;
+		this.#dataLayer = DEFAULT_GOOGLE_TAG_DATA_LAYER;
 		if (typeof first === 'string') {
 			this.addMeasurementId(first, ...rest);
 		} else if (typeof first === 'object') {
-			const { allowAdPersonalizationSignals, measurementId, testMode = false } = first;
+			const {
+				allowAdPersonalizationSignals,
+				measurementId,
+				testMode = false,
+				layer = DEFAULT_GOOGLE_TAG_DATA_LAYER,
+			} = first;
 			this.#testMode = testMode;
 			if (allowAdPersonalizationSignals === false) {
 				this.#allowAdPersonalizationSignals = allowAdPersonalizationSignals;
 			}
+			this.#dataLayer = layer;
 			if (typeof measurementId === 'string') {
 				this.addMeasurementId(measurementId);
 			} else if (Array.isArray(measurementId)) {
@@ -76,6 +86,7 @@ class GoogleTag {
 		this.measurementIds.forEach(v => {
 			this.#assertMeasurementId(v);
 		});
+		this.#loadGoogleTagLayer(this.#dataLayer);
 	}
 
 	get defaultMeasurementId(): GoogleTagMeasurementId | undefined {
@@ -180,7 +191,7 @@ class GoogleTag {
 		}
 	}
 
-	initialize({ googleTagUrl, nonce, layer }: InitializeOptions = {}): void {
+	initialize({ googleTagUrl, nonce }: InitializeOptions = {}): void {
 		if (this.#initialize) {
 			return;
 		}
@@ -188,7 +199,7 @@ class GoogleTag {
 		if (!defaultMeasurementId) {
 			throw new Error('No Google Analytics Measurement ID provided.');
 		}
-		this.#loadGoogleTag(defaultMeasurementId, googleTagUrl, nonce, layer);
+		this.#loadGoogleTag(defaultMeasurementId, googleTagUrl, nonce);
 		this.#initialize = true;
 		if (this.#allowAdPersonalizationSignals === false) {
 			this.gtag('set', 'allow_ad_personalization_signals', false);
@@ -266,12 +277,7 @@ class GoogleTag {
 		return GOOGLE_TAG_MEASUREMENT_ID_REGEXP.test(value);
 	}
 
-	#loadGoogleTag(
-		measurementID: GoogleTagMeasurementId,
-		googleTagUrl = DEFAULT_GOOGLE_TAG_URL,
-		nonce?: string,
-		layer = 'dataLayer'
-	): void {
+	#loadGoogleTag(measurementID: GoogleTagMeasurementId, googleTagUrl = DEFAULT_GOOGLE_TAG_URL, nonce?: string): void {
 		const exist = document.getElementById('google-tag-manager');
 		if (exist) {
 			return;
@@ -279,15 +285,16 @@ class GoogleTag {
 		const script = document.createElement('script');
 		script.async = true;
 		script.id = 'google-tag-manager';
-		script.src = `${googleTagUrl}?id=${measurementID}${layer === 'dataLayer' ? '' : `&l=${layer}`}`;
+		script.src = `${googleTagUrl}?id=${measurementID}${
+			this.#dataLayer === 'dataLayer' ? '' : `&l=${this.#dataLayer}`
+		}`;
 		if (nonce) {
 			script.setAttribute('nonce', nonce);
 		}
 		document.head.appendChild(script);
-		this.#loadGoogleTagLayer(layer);
 	}
 
-	#loadGoogleTagLayer(layer = 'dataLayer'): void {
+	#loadGoogleTagLayer(layer: string): void {
 		// @ts-expect-error Custom dataLayer
 		if (!(layer in window) || typeof window[layer] === 'undefined') {
 			// @ts-expect-error Custom dataLayer
