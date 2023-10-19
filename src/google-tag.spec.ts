@@ -81,8 +81,8 @@ describe('@hexatool/google-tag', () => {
 		delete window[FAKE_LAYER];
 	});
 
-	describe('constructor()', () => {
-		it('new GoogleTag(...measurementId: string[])', () => {
+	describe('new GoogleTag()', () => {
+		it('new GoogleTag(...measurementId: GoogleTagMeasurementId[])', () => {
 			// When
 			gtag = new GoogleTag(MEASUREMENT_ID, MEASUREMENT_ID_2);
 
@@ -91,7 +91,7 @@ describe('@hexatool/google-tag', () => {
 			expect(gtag.measurementIds).toStrictEqual([MEASUREMENT_ID, MEASUREMENT_ID_2]);
 			expectNotInit();
 		});
-		it('new GoogleTag(...measurementId: string[]) with repeated ids', () => {
+		it('new GoogleTag(...measurementId: GoogleTagMeasurementId[]) with repeated ids', () => {
 			// When
 			gtag = new GoogleTag(MEASUREMENT_ID, MEASUREMENT_ID, MEASUREMENT_ID_2);
 
@@ -100,7 +100,7 @@ describe('@hexatool/google-tag', () => {
 			expect(gtag.measurementIds).toStrictEqual([MEASUREMENT_ID, MEASUREMENT_ID_2]);
 			expectNotInit();
 		});
-		it('new GoogleTag(...measurementId: string[]) with invalid format', () => {
+		it('new GoogleTag(...measurementId: GoogleTagMeasurementId[]) with invalid format', () => {
 			// Given
 			const badFormat = 'UA-128378752-3';
 			// @ts-expect-error Testing invalid format
