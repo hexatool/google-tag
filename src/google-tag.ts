@@ -179,9 +179,6 @@ class GoogleTag {
 	gtag(...args: GoogleTagSetMeasurementIdArguments): void;
 	gtag(...args: GoogleTagConsentArguments): void;
 	gtag(...args: GoogleTagArguments): void {
-		if (!this.#initialize) {
-			throw new Error('Google Analytics is not initialized.');
-		}
 		if (this.#testMode || this.#isQueuing) {
 			this.#queueGtag.push(args);
 		} else {

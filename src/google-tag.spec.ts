@@ -211,13 +211,13 @@ describe('@hexatool/google-tag', () => {
 	});
 
 	describe('consent()', () => {
-		it('consent(params: GoogleTagConsentParams)', () => {
+		it('consent(action: GoogleTagConsentAction, params: GoogleTagConsentParams)', () => {
 			// Given
 			gtag = new GoogleTag(MEASUREMENT_ID, MEASUREMENT_ID_2);
 			gtag.initialize();
 
 			// When
-			gtag.consent({
+			gtag.consent('update', {
 				ad_storage: 'denied',
 				wait_for_update: 1000,
 			});
@@ -226,6 +226,7 @@ describe('@hexatool/google-tag', () => {
 			expectArg(
 				[
 					'consent',
+					'update',
 					{
 						ad_storage: 'denied',
 						wait_for_update: 1000,
@@ -234,6 +235,39 @@ describe('@hexatool/google-tag', () => {
 				3
 			);
 			expectScript();
+		});
+		it('consent(action: GoogleTagConsentAction, params: GoogleTagConsentParams) set default before initialize()', () => {
+			// Given
+			gtag = new GoogleTag(MEASUREMENT_ID, MEASUREMENT_ID_2);
+
+			// When
+			gtag.consent('default', {
+				ad_storage: 'denied',
+				wait_for_update: 1000,
+			});
+
+			// Then
+			expectNotInit();
+			expectNotScript();
+			expectArg(
+				[
+					'consent',
+					'default',
+					{
+						ad_storage: 'denied',
+						wait_for_update: 1000,
+					},
+				],
+				0
+			);
+
+			// When
+			gtag.initialize();
+
+			// Then
+			expectScript();
+			expectArg(['js', newDate], 1);
+			expectArg(['config', MEASUREMENT_ID], 2);
 		});
 	});
 
@@ -346,13 +380,12 @@ describe('@hexatool/google-tag', () => {
 			gtag = new GoogleTag({
 				testMode: true,
 			});
-			const fn = () => gtag.gtag('event', 'test');
 
 			// When / Then
-			expect(fn).toThrow(`Google Analytics is not initialized.`);
+			gtag.gtag('event', 'test');
 
 			// Then
-			expectNotInit();
+			expectEmptyLayer();
 		});
 		it('gtag(...args: GoogleTagArguments) queue', () => {
 			// Given
