@@ -7,6 +7,8 @@ interface GoogleTagConsentParams extends GoogleTagParamsWithCallback {
 	wait_for_update?: number;
 }
 
-type GoogleTagConsentArguments = ['consent', GoogleTagConsentParams];
+type GoogleTagConsentAction = 'default' | 'update';
 
-export type { GoogleTagConsentArguments, GoogleTagConsentParams };
+type GoogleTagConsentArguments = ['consent', GoogleTagConsentAction, GoogleTagConsentParams];
+
+export type { GoogleTagConsentAction, GoogleTagConsentArguments, GoogleTagConsentParams };

@@ -1,5 +1,5 @@
 ---
-"@hexatool/google-tag": patch
+"@hexatool/google-tag": major
 ---
 
 Initial release
