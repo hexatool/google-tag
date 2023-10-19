@@ -2,6 +2,7 @@ import type {
 	GoogleTagArguments,
 	GoogleTagConfigArguments,
 	GoogleTagConfigParams,
+	GoogleTagConsentAction,
 	GoogleTagConsentArguments,
 	GoogleTagConsentParams,
 	GoogleTagCustomEventArguments,
@@ -133,8 +134,8 @@ class GoogleTag {
 		}
 	}
 
-	consent(params: GoogleTagConsentParams): void {
-		this.gtag('consent', params);
+	consent(action: GoogleTagConsentAction, params: GoogleTagConsentParams): void {
+		this.gtag('consent', action, params);
 	}
 
 	event(event: 'login', params?: GoogleTagLoginEventParams): void;
