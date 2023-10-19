@@ -118,7 +118,7 @@ const gtag = new GoogleTag({
     allowAdPersonalizationSignals: false,
     layer: 'customLayer',
     measurementId: 'G-XXXXXXXXXX',
-    testMode: false,
+    testMode: false
 });
 ```
 
@@ -126,14 +126,10 @@ const gtag = new GoogleTag({
 
 ```typescript
 const gtag = new GoogleTag({
-    allowAdPersonalizationSignals: false,
-    layer: 'customLayer',
     measurementId: {
         cookie_prefix: 'my_prefix',
-        measurementId: 'G-XXXXXXXXXX',
-        ...
-    },
-    testMode: false,
+        measurementId: 'G-XXXXXXXXXX'
+    }
 });
 ```
 
@@ -141,17 +137,13 @@ const gtag = new GoogleTag({
 
 ```typescript
 const gtag = new GoogleTag({
-    allowAdPersonalizationSignals: false,
-    layer: 'customLayer',
     measurementId: [
         'AW-XXXXXXXXXX',
         {
             cookie_prefix: 'my_prefix',
-            measurementId: 'G-XXXXXXXXXX',
-            ...
+            measurementId: 'G-XXXXXXXXXX'
         }
-    ],
-    testMode: false,
+    ]
 });
 ```
 
