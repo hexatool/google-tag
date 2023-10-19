@@ -26,6 +26,8 @@
 
 - [Installation](#installation)
 - [How to use](#how-to-use)
+- [API](#api)
+    - [`constructor()`](#constructor)
 
 ## Installation
 
@@ -95,6 +97,62 @@ const App = () => {
     </main>
   );
 };
+```
+
+## API
+
+### `constructor()`
+
+Creates a new instance of GoogleTag.
+
+**With only measurement ids**
+
+```typescript
+const gtag = new GoogleTag("G-XXXXXXXXXX", "AW-XXXXXXXXXX");
+```
+
+**With extra options**
+
+```typescript
+const gtag = new GoogleTag({
+    allowAdPersonalizationSignals: false,
+    layer: 'customLayer',
+    measurementId: 'G-XXXXXXXXXX',
+    testMode: false,
+});
+```
+
+**With measurement id options**
+
+```typescript
+const gtag = new GoogleTag({
+    allowAdPersonalizationSignals: false,
+    layer: 'customLayer',
+    measurementId: {
+        cookie_prefix: 'my_prefix',
+        measurementId: 'G-XXXXXXXXXX',
+        ...
+    },
+    testMode: false,
+});
+```
+
+**With multiple measurement ids**
+
+```typescript
+const gtag = new GoogleTag({
+    allowAdPersonalizationSignals: false,
+    layer: 'customLayer',
+    measurementId: [
+        'AW-XXXXXXXXXX',
+        {
+            cookie_prefix: 'my_prefix',
+            measurementId: 'G-XXXXXXXXXX',
+            ...
+        }
+    ],
+    testMode: false,
+});
 ```
 
 ## Hexatool Code Quality Standards
