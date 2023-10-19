@@ -30,6 +30,52 @@ yarn add @hexatool/google-tag
 pnpm add @hexatool/google-tag
 ```
 
+## How to use
+
+```typescript
+import { GoogleTag } from '@hexatool/google-tag';
+
+const gtag = new GoogleTag('G-XXXXXXXXXX');
+
+// Loads Google Tag script
+gtag.initialize();
+
+// Sends a page view event
+gtag.event('page_view', {
+  page_title: 'Home',
+  page_location: 'https://example.com',
+});
+```
+
+**Using with React**
+
+```typescript
+import { useGoogleTag } from '@hexatool/google-tag/react';
+
+const App = () => {
+  const gtag = useGoogleTag('G-XXXXXXXXXX');
+
+  useEffect(() => {
+    gtag.initialize();
+  }, []);
+
+  const handleClick = () => {
+    ...
+    gtag.event('click', { category: 'button', label: 'Lorem ipsum' });
+  };
+
+  return (
+    <main>
+      <h1>Lorem ipsum</h1>
+   
+      <button onClick={handleClick}>
+        Click me
+      </button>
+    </main>
+  );
+};
+```
+
 ## Hexatool Code Quality Standards
 
 Publishing this package we are committing ourselves to the following code quality standards:
