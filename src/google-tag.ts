@@ -46,13 +46,15 @@ class GoogleTag {
 	readonly #allowAdPersonalizationSignals?: false;
 	#dataLayer: string;
 	#initialize: boolean;
-	readonly #isQueuing: boolean;
+	#isQueuing: boolean;
 	readonly #measurementId: Map<GoogleTagMeasurementId, GoogleTagConfigParams>;
 	readonly #queueGtag: GoogleTagArguments[];
 	#testMode: boolean;
 
 	constructor(...measurementIds: GoogleTagMeasurementId[]);
+
 	constructor(options: GoogleTagOptions);
+
 	constructor(...args: [GoogleTagOptions | GoogleTagMeasurementId, ...GoogleTagMeasurementId[]]) {
 		if (typeof window === 'undefined' || typeof document === 'undefined') {
 			throw new Error(`'GoogleTag' is only available in the browser.`);
@@ -114,7 +116,9 @@ class GoogleTag {
 	}
 
 	config(params: GoogleTagConfigParams): void;
+
 	config(measurementID: GoogleTagMeasurementId, params?: GoogleTagConfigParams): void;
+
 	config(
 		measurementIdOrParams: GoogleTagMeasurementId | GoogleTagConfigParams,
 		params?: GoogleTagConfigParams
@@ -136,6 +140,15 @@ class GoogleTag {
 
 	consent(action: GoogleTagConsentAction, params: GoogleTagConsentParams): void {
 		this.gtag('consent', action, params);
+	}
+
+	destroy(): void {
+		this.#removeGoogleTagScript();
+		this.#emptyGoogleTagLayer(this.#dataLayer);
+		this.#emptyQueue();
+		this.#initialize = false;
+		this.#testMode = false;
+		this.#isQueuing = false;
 	}
 
 	event(event: 'login', params?: GoogleTagLoginEventParams): void;
@@ -197,7 +210,7 @@ class GoogleTag {
 		if (!defaultMeasurementId) {
 			throw new Error('No Google Analytics Measurement ID provided.');
 		}
-		this.#loadGoogleTag(defaultMeasurementId, googleTagUrl, nonce);
+		this.#loadGoogleTagScript(defaultMeasurementId, googleTagUrl, nonce);
 		this.#initialize = true;
 		if (this.#allowAdPersonalizationSignals === false) {
 			this.gtag('set', 'allow_ad_personalization_signals', false);
@@ -233,6 +246,15 @@ class GoogleTag {
 		return true;
 	}
 
+	#emptyGoogleTagLayer(layer: string): void {
+		// @ts-expect-error Custom dataLayer
+		window[layer] = [];
+	}
+
+	#emptyQueue(): void {
+		this.#queueGtag.splice(0, this.#queueGtag.length);
+	}
+
 	#flushQueue(): void {
 		if (this.#isQueuing) {
 			return;
@@ -251,6 +273,10 @@ class GoogleTag {
 				this.#gtag(...args);
 			}
 		}
+	}
+
+	#getScriptElement(): HTMLElement | null {
+		return document.getElementById('google-tag-manager');
 	}
 
 	#gtag(...args: GoogleTagArguments): void {
@@ -275,8 +301,28 @@ class GoogleTag {
 		return GOOGLE_TAG_MEASUREMENT_ID_REGEXP.test(value);
 	}
 
-	#loadGoogleTag(measurementID: GoogleTagMeasurementId, googleTagUrl = DEFAULT_GOOGLE_TAG_URL, nonce?: string): void {
-		const exist = document.getElementById('google-tag-manager');
+	#loadGoogleTagLayer(layer: string): void {
+		// @ts-expect-error Custom dataLayer
+		if (!(layer in window) || typeof window[layer] === 'undefined') {
+			// @ts-expect-error Custom dataLayer
+			window[layer] = [];
+		}
+
+		if (!('gtag' in window) || typeof window.gtag === 'undefined') {
+			window.gtag = function gtag(...args: unknown[]) {
+				// @ts-expect-error Custom dataLayer
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
+				window[layer].push(args);
+			};
+		}
+	}
+
+	#loadGoogleTagScript(
+		measurementID: GoogleTagMeasurementId,
+		googleTagUrl = DEFAULT_GOOGLE_TAG_URL,
+		nonce?: string
+	): void {
+		const exist = this.#getScriptElement();
 		if (exist) {
 			return;
 		}
@@ -292,19 +338,10 @@ class GoogleTag {
 		document.head.appendChild(script);
 	}
 
-	#loadGoogleTagLayer(layer: string): void {
-		// @ts-expect-error Custom dataLayer
-		if (!(layer in window) || typeof window[layer] === 'undefined') {
-			// @ts-expect-error Custom dataLayer
-			window[layer] = [];
-		}
-
-		if (!('gtag' in window) || typeof window.gtag === 'undefined') {
-			window.gtag = function gtag(...args: unknown[]) {
-				// @ts-expect-error Custom dataLayer
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
-				window[layer].push(args);
-			};
+	#removeGoogleTagScript(): void {
+		const exist = this.#getScriptElement();
+		if (exist) {
+			exist.remove();
 		}
 	}
 }

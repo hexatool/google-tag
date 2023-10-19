@@ -26,18 +26,27 @@ describe('@hexatool/google-tag', () => {
 		expect(exist).not.toBeNull();
 	}
 
-	function expectLayer(layer: string) {
+	function expectLayer(layer: string, length?: number) {
 		// @ts-expect-error Testing dataLayer
 		expect(window[layer]).toBeDefined();
+		if (length !== undefined) {
+			// @ts-expect-error Testing dataLayer
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call
+			expect(window[layer].length).toBe(length);
+		}
 	}
 
-	function expectNotLayer() {
-		expect(window.dataLayer).toBeUndefined();
+	function expectNotLayer(layer = 'dataLayer') {
+		// @ts-expect-error Testing dataLayer
+		expect(window[layer]).toBeUndefined();
 	}
 
-	function expectEmptyLayer() {
-		expect(window.dataLayer).toBeDefined();
-		expect(window.dataLayer.length).toBe(0);
+	function expectEmptyLayer(layer = 'dataLayer') {
+		// @ts-expect-error Testing dataLayer
+		expect(window[layer]).toBeDefined();
+		// @ts-expect-error Testing dataLayer
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call
+		expect(window[layer].length).toBe(0);
 	}
 
 	function expectNotInit(dataLayer = 'dataLayer') {
@@ -268,6 +277,66 @@ describe('@hexatool/google-tag', () => {
 			expectScript();
 			expectArg(['js', newDate], 1);
 			expectArg(['config', MEASUREMENT_ID], 2);
+		});
+	});
+
+	describe('destroy()', () => {
+		it('destroy()', () => {
+			// Given
+			gtag = new GoogleTag(MEASUREMENT_ID, MEASUREMENT_ID_2);
+			gtag.initialize();
+
+			// When
+			gtag.gtag('event', 'test');
+			gtag.gtag('event', 'test', {
+				foo: 'bar',
+				send_to: MEASUREMENT_ID_2,
+			});
+
+			// Then
+			expectArg(['event', 'test'], 3);
+			expectArg(
+				[
+					'event',
+					'test',
+					{
+						foo: 'bar',
+						send_to: MEASUREMENT_ID_2,
+					},
+				],
+				4
+			);
+			expectScript();
+			expectLayer('dataLayer', 5);
+
+			// When
+			gtag.setTestMode(true);
+			gtag.gtag('event', 'test2');
+
+			// Then
+			expectLayer('dataLayer', 5);
+
+			// When
+			gtag.destroy();
+
+			// Then
+			expectNotInit();
+			expectEmptyLayer();
+
+			// When
+			gtag.gtag('event', 'test3');
+
+			// Then
+			expectNotInit();
+			expectArg(['event', 'test3'], 0);
+
+			// When
+			gtag.initialize();
+			expectScript();
+			expectArg(['js', newDate], 1);
+			expectArg(['config', MEASUREMENT_ID], 2);
+			expectArg(['config', MEASUREMENT_ID_2], 3);
+			expectLayer('dataLayer', 4);
 		});
 	});
 
