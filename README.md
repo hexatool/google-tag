@@ -6,6 +6,27 @@
   Agnostic Google Tag library.
 </p>
 
+<p align="center">
+    <a href="https://www.npmjs.com/package/@hexatool/google-tag">
+        <img src="https://img.shields.io/npm/v/@hexatool/google-tag.svg" alt="@hexatool/google-tag version">
+    </a>
+    <a href="https://www.npmjs.com/package/@hexatool/google-tag">
+        <img src="https://img.shields.io/npm/dw/@hexatool/google-tag" alt="@hexatool/google-tag npm downloads">
+    </a>
+    <a href="https://github.com/hexatool/google-tag/blob/main/LICENSE">
+        <img src="https://img.shields.io/github/license/hexatool/google-tag" alt="@hexatool/google-tag license">   
+    </a>
+    <a href="https://github.com/hexatool/google-tag/actions/workflows/ci.yml">
+        <img src="https://img.shields.io/github/actions/workflow/status/hexatool/google-tag/ci.yml" alt="@hexatool/google-tag license">   
+    </a>
+    <a href="https://github.com/hexatool/google-tag/issues">
+        <img src="https://img.shields.io/github/issues/hexatool/google-tag" alt="@hexatool/google-tag license">   
+    </a>
+</p>
+
+- [Installation](#installation)
+- [How to use](#how-to-use)
+
 ## Installation
 
 ```bash
@@ -33,17 +54,17 @@ pnpm add @hexatool/google-tag
 ## How to use
 
 ```typescript
-import { GoogleTag } from '@hexatool/google-tag';
+import { GoogleTag } from "@hexatool/google-tag";
 
-const gtag = new GoogleTag('G-XXXXXXXXXX');
+const gtag = new GoogleTag("G-XXXXXXXXXX");
 
 // Loads Google Tag script
 gtag.initialize();
 
 // Sends a page view event
-gtag.event('page_view', {
-  page_title: 'Home',
-  page_location: 'https://example.com',
+gtag.event("page_view", {
+  page_title: "Home",
+  page_location: "https://example.com",
 });
 ```
 
@@ -67,7 +88,7 @@ const App = () => {
   return (
     <main>
       <h1>Lorem ipsum</h1>
-   
+
       <button onClick={handleClick}>
         Click me
       </button>
