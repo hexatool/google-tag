@@ -4,5 +4,7 @@
   "initialVersions": {
     "@hexatool/google-tag": "0.0.0"
   },
-  "changesets": []
+  "changesets": [
+    "plenty-meals-tease"
+  ]
 }

@@ -1,5 +1,11 @@
 # @magnus-strategy/react-ga4
 
+## 1.0.0-beta.0
+
+### Major Changes
+
+- 2fce015: Initial release
+
 ## 2.3.1
 
 ### Patch Changes
