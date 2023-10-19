@@ -284,7 +284,10 @@ class GoogleTag {
 			script.setAttribute('nonce', nonce);
 		}
 		document.head.appendChild(script);
+		this.#loadGoogleTagLayer(layer);
+	}
 
+	#loadGoogleTagLayer(layer = 'dataLayer'): void {
 		// @ts-expect-error Custom dataLayer
 		if (!(layer in window) || typeof window[layer] === 'undefined') {
 			// @ts-expect-error Custom dataLayer
