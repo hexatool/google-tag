@@ -27,7 +27,9 @@
 - [Installation](#installation)
 - [How to use](#how-to-use)
 - [API](#api)
-    - [`constructor()`](#constructor)
+    - [`GoogleTag`](#googletag)
+      - [`constructor()`](#constructor)
+    - [`GoogleTagOptions`](#googletagoptions)
 
 ## Installation
 
@@ -101,7 +103,11 @@ const App = () => {
 
 ## API
 
-### `constructor()`
+### `GoogleTag`
+
+Main class to interact with Google Tag.
+
+#### `constructor()`
 
 Creates a new instance of GoogleTag.
 
@@ -112,6 +118,8 @@ const gtag = new GoogleTag("G-XXXXXXXXXX", "AW-XXXXXXXXXX");
 ```
 
 **With extra options**
+
+See documentation for [GoogleTagOptions](#googletagoptions).
 
 ```typescript
 const gtag = new GoogleTag({
@@ -146,6 +154,28 @@ const gtag = new GoogleTag({
     ]
 });
 ```
+
+### `GoogleTagMeasurementId`
+- **Type**: `string`
+- **Allowed values**: `G-XXXXXXXXXX | GT-XXXXXXXXXX | AW-XXXXXXXXXX | DC-XXXXXXXXXX`
+
+### `GoogleTagOptions`
+
+#### `allowAdPersonalizationSignals`
+- **Type**: `false`
+- **Default**: `undefined`
+
+#### `layer`
+- **Type**: `string`
+- **Default**: `"dataLayer"`
+
+#### `measurementId`
+- **Type**: `GoogleTagMeasurementId | GoogleTagConfigParamsWithMeasurementId | (GoogleTagMeasurementId | GoogleTagConfigParamsWithMeasurementId)[]`
+- **Default**: `undefined`
+
+#### `testMode`
+- **Type**: `boolean`
+- **Default**: `false`
 
 ## Hexatool Code Quality Standards
 
