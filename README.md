@@ -12,10 +12,22 @@
 npm install --save @hexatool/google-tag
 ```
 
+**Using bun**
+
+```bash
+bun add @hexatool/google-tag
+```
+
 **Using yarn**
 
 ```bash
 yarn add @hexatool/google-tag
+```
+
+**Using pnpm**
+
+```bash
+pnpm add @hexatool/google-tag
 ```
 
 ## Hexatool Code Quality Standards
