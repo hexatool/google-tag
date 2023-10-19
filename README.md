@@ -1,9 +1,9 @@
 <h1 align="center">
-  Google Analytics
+  Google Tag
 </h1>
 
 <p align="center">
-  Agnostic Google Analytics library.
+  Agnostic Google Tag library.
 </p>
 
 ## Installation
@@ -32,9 +32,9 @@ yarn add @hexatool/google-tag
 
 https://developers.google.com/tag-platform/gtagjs?hl=es
 https://developers.google.com/tag-platform/gtagjs/reference?hl=es
-https://developers.google.com/analytics/devguides/collection/ga4?hl=es
+https://developers.google.com/Tag/devguides/collection/ga4?hl=es
 
-https://developers.google.com/analytics/devguides/collection/gtagjs?hl=es
+https://developers.google.com/Tag/devguides/collection/gtagjs?hl=es
 
 ## Hexatool Code Quality Standards
 
