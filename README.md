@@ -136,7 +136,7 @@ const gtag = new GoogleTag({
 
 See documentation for [here](#googletagconfigwithmeasurementid).
 
-```typescript
+````typescript
 
 ```typescript
 const gtag = new GoogleTag({
@@ -145,7 +145,7 @@ const gtag = new GoogleTag({
     measurementId: "G-XXXXXXXXXX",
   },
 });
-```
+````
 
 **With multiple measurement ids**
 
