@@ -121,7 +121,7 @@ const gtag = new GoogleTag("G-XXXXXXXXXX", "AW-XXXXXXXXXX");
 
 **With extra options**
 
-See documentation for [GoogleTagOptions](#googletagoptions).
+See documentation for [`GoogleTagOptions`](#googletagoptions).
 
 ```typescript
 const gtag = new GoogleTag({
@@ -133,6 +133,10 @@ const gtag = new GoogleTag({
 ```
 
 **With measurement id options**
+
+See documentation for [`GoogleTagConfigWithMeasurementId`](#googletagconfigwithmeasurementid).
+
+```typescript
 
 ```typescript
 const gtag = new GoogleTag({
