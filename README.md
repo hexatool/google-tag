@@ -136,8 +136,6 @@ const gtag = new GoogleTag({
 
 See documentation [here](#googletagconfigwithmeasurementid).
 
-````typescript
-
 ```typescript
 const gtag = new GoogleTag({
   measurementId: {
