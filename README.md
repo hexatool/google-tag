@@ -191,74 +191,65 @@ const gtag = new GoogleTag({
 
 ### `GoogleTagConfigWithMeasurementId`
 
+See [full documentation](https://developers.google.com/analytics/devguides/collection/ga4/reference/config).
 
 <details>
   <summary>Expand properties</summary>
+
 #### `allow_ad_personalization_signals`
 
 - **Type**: `boolean`
 - **Default**: `true`
-- **Documentation**: See [full documentation](https://developers.google.com/analytics/devguides/collection/ga4/reference/config#allow_ad_personalization_signals).
 
 #### `allow_google_signals`
 
 - **Type**: `boolean`
 - **Default**: `true`
-- **Documentation**: See [full documentation](https://developers.google.com/analytics/devguides/collection/ga4/reference/config#allow_google_signals).
 
 #### `campaign_content`
 
 - **Type**: `string`
 - **Default**: `undefined`
-- **Documentation**: See [full documentation](https://developers.google.com/analytics/devguides/collection/ga4/reference/config#campaign_content).
 
 #### `campaign_id`
 
 - **Type**: `string`
 - **Default**: `undefined`
-- **Documentation**: See [full documentation](https://developers.google.com/analytics/devguides/collection/ga4/reference/config#campaign_id).
 
 #### `campaign_medium`
 
 - **Type**: `string`
 - **Default**: `undefined`
-- **Documentation**: See [full documentation](https://developers.google.com/analytics/devguides/collection/ga4/reference/config#campaign_medium).
 
 #### `campaign_name`
 
 - **Type**: `string`
 - **Default**: `undefined`
-- **Documentation**: See [full documentation](https://developers.google.com/analytics/devguides/collection/ga4/reference/config#campaign_name).
 
 #### `campaign_source`
 
 - **Type**: `string`
 - **Default**: `undefined`
-- **Documentation**: See [full documentation](https://developers.google.com/analytics/devguides/collection/ga4/reference/config#campaign_source).
 
 #### `campaign_term`
 
 - **Type**: `string`
 - **Default**: `undefined`
-- **Documentation**: See [full documentation](https://developers.google.com/analytics/devguides/collection/ga4/reference/config#campaign_term).
 
 #### `client_id`
 
 - **Type**: `string`
 - **Default**: `A randomly generated value for each user.`
-- **Documentation**: See [full documentation](https://developers.google.com/analytics/devguides/collection/ga4/reference/config#client_id).
 
 #### `content_group`
 
 - **Type**: `string`
 - **Default**: `undefined`
-- **Documentation**: See [full documentation](https://developers.google.com/analytics/devguides/collection/ga4/reference/config#content_group).
 
 #### `cookie_domain`
 
 - **Type**: `string`
 - **Default**: `"auto"`
-- **Documentation**: See [full documentation](https://developers.google.com/analytics/devguides/collection/ga4/reference/config#cookie_domain).
 
 #### `measurementId`
 
