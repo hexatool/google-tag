@@ -87,7 +87,7 @@
 		"@types/react": "18.2.29",
 		"bun-types": "1.0.6",
 		"esbuild-plugin-umd-wrapper": "1.0.7",
-		"eslint": "8.51.0",
+		"eslint": "8.52.0",
 		"react": "18.2.0",
 		"tsup": "7.2.0",
 		"typescript": "5.2.2"
