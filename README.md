@@ -143,7 +143,7 @@ const gtag = new GoogleTag({
     measurementId: "G-XXXXXXXXXX",
   },
 });
-````
+```
 
 **With multiple measurement ids**
 
