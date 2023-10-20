@@ -29,7 +29,6 @@ interface GoogleTagConfigWithMeasurementId extends GoogleAnalyticsConfig {
 }
 
 interface GoogleTagOptions {
-	allowAdPersonalizationSignals?: false;
 	layer?: string;
 	measurementId?:
 		| GoogleTagMeasurementId
@@ -43,7 +42,6 @@ const DEFAULT_GOOGLE_TAG_URL = 'https://www.googletagmanager.com/gtag/js';
 const DEFAULT_GOOGLE_TAG_DATA_LAYER = 'dataLayer';
 
 class GoogleTag {
-	readonly #allowAdPersonalizationSignals?: false;
 	#dataLayer: string;
 	#initialize: boolean;
 	#isQueuing: boolean;
@@ -69,16 +67,8 @@ class GoogleTag {
 		if (typeof first === 'string') {
 			this.addMeasurementId(first, ...rest);
 		} else if (typeof first === 'object') {
-			const {
-				allowAdPersonalizationSignals,
-				measurementId,
-				testMode = false,
-				layer = DEFAULT_GOOGLE_TAG_DATA_LAYER,
-			} = first;
+			const { measurementId, testMode = false, layer = DEFAULT_GOOGLE_TAG_DATA_LAYER } = first;
 			this.#testMode = testMode;
-			if (allowAdPersonalizationSignals === false) {
-				this.#allowAdPersonalizationSignals = allowAdPersonalizationSignals;
-			}
 			this.#dataLayer = layer;
 			if (typeof measurementId === 'string') {
 				this.addMeasurementId(measurementId);
@@ -212,9 +202,6 @@ class GoogleTag {
 		}
 		this.#loadGoogleTagScript(defaultMeasurementId, googleTagUrl, nonce);
 		this.#initialize = true;
-		if (this.#allowAdPersonalizationSignals === false) {
-			this.gtag('set', 'allow_ad_personalization_signals', false);
-		}
 		this.gtag('js', new Date());
 		this.#measurementId.forEach((params, measurementId) => {
 			this.config(measurementId, params);

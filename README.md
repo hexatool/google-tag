@@ -162,11 +162,6 @@ const gtag = new GoogleTag({
 <details>
   <summary>Expand properties</summary>
 
-#### `allowAdPersonalizationSignals`
-
-- **Type**: `false`
-- **Default**: `undefined`
-
 #### `layer`
 
 - **Type**: `string`
