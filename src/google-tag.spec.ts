@@ -178,7 +178,7 @@ describe('@hexatool/google-tag', () => {
 
 			// When
 			gtag.config({
-				groups: ['test'],
+				campaign_term: 'test',
 			});
 
 			// Then
@@ -187,7 +187,7 @@ describe('@hexatool/google-tag', () => {
 					'config',
 					MEASUREMENT_ID,
 					{
-						groups: ['test'],
+						campaign_term: 'test',
 					},
 				],
 				3
@@ -201,7 +201,7 @@ describe('@hexatool/google-tag', () => {
 
 			// When
 			gtag.config(MEASUREMENT_ID_2, {
-				groups: ['test'],
+				page_title: 'test',
 			});
 
 			// Then
@@ -210,7 +210,7 @@ describe('@hexatool/google-tag', () => {
 					'config',
 					MEASUREMENT_ID_2,
 					{
-						groups: ['test'],
+						page_title: 'test',
 					},
 				],
 				3
@@ -543,44 +543,6 @@ describe('@hexatool/google-tag', () => {
 			expect(exist.src).toBe(`https://www.googletagmanager.com/gtag/js?id=${MEASUREMENT_ID}`);
 			expect(window.dataLayer).toBeDefined();
 			expect(window.dataLayer.length).toBe(3);
-		});
-		it('initialize() with allowAdPersonalizationSignals', () => {
-			// Given
-			gtag = new GoogleTag({
-				measurementId: [
-					MEASUREMENT_ID,
-					{
-						measurementId: MEASUREMENT_ID_2,
-						user_id: '1',
-						send_page_view: false,
-					},
-				],
-				allowAdPersonalizationSignals: false,
-			});
-
-			// When
-			gtag.initialize();
-
-			// Then
-			expectArg(['set', 'allow_ad_personalization_signals', false]);
-			expectArg(['js', newDate], 1);
-			expectArg(['config', MEASUREMENT_ID], 2);
-			expectArg(
-				[
-					'config',
-					MEASUREMENT_ID_2,
-					{
-						user_id: '1',
-						send_page_view: false,
-					},
-				],
-				3
-			);
-			const exist = document.getElementById('google-tag-manager') as HTMLScriptElement;
-			expect(exist).not.toBeNull();
-			expect(exist.src).toBe(`https://www.googletagmanager.com/gtag/js?id=${MEASUREMENT_ID}`);
-			expect(window.dataLayer).toBeDefined();
-			expect(window.dataLayer.length).toBe(4);
 		});
 		it('initialize() without measurement', () => {
 			// Given
