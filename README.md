@@ -27,9 +27,9 @@
 - [Installation](#installation)
 - [How to use](#how-to-use)
 - [API](#api)
-    - [`GoogleTag`](#googletag)
-      - [`constructor()`](#constructor)
-    - [`GoogleTagOptions`](#googletagoptions)
+  - [`GoogleTag`](#googletag)
+    - [`constructor()`](#constructor)
+  - [`GoogleTagOptions`](#googletagoptions)
 
 ## Installation
 
@@ -123,10 +123,10 @@ See documentation for [GoogleTagOptions](#googletagoptions).
 
 ```typescript
 const gtag = new GoogleTag({
-    allowAdPersonalizationSignals: false,
-    layer: 'customLayer',
-    measurementId: 'G-XXXXXXXXXX',
-    testMode: false
+  allowAdPersonalizationSignals: false,
+  layer: "customLayer",
+  measurementId: "G-XXXXXXXXXX",
+  testMode: false,
 });
 ```
 
@@ -134,10 +134,10 @@ const gtag = new GoogleTag({
 
 ```typescript
 const gtag = new GoogleTag({
-    measurementId: {
-        cookie_prefix: 'my_prefix',
-        measurementId: 'G-XXXXXXXXXX'
-    }
+  measurementId: {
+    cookie_prefix: "my_prefix",
+    measurementId: "G-XXXXXXXXXX",
+  },
 });
 ```
 
@@ -145,35 +145,40 @@ const gtag = new GoogleTag({
 
 ```typescript
 const gtag = new GoogleTag({
-    measurementId: [
-        'AW-XXXXXXXXXX',
-        {
-            cookie_prefix: 'my_prefix',
-            measurementId: 'G-XXXXXXXXXX'
-        }
-    ]
+  measurementId: [
+    "AW-XXXXXXXXXX",
+    {
+      cookie_prefix: "my_prefix",
+      measurementId: "G-XXXXXXXXXX",
+    },
+  ],
 });
 ```
 
 ### `GoogleTagMeasurementId`
+
 - **Type**: `string`
 - **Allowed values**: `G-XXXXXXXXXX | GT-XXXXXXXXXX | AW-XXXXXXXXXX | DC-XXXXXXXXXX`
 
 ### `GoogleTagOptions`
 
 #### `allowAdPersonalizationSignals`
+
 - **Type**: `false`
 - **Default**: `undefined`
 
 #### `layer`
+
 - **Type**: `string`
 - **Default**: `"dataLayer"`
 
 #### `measurementId`
+
 - **Type**: `GoogleTagMeasurementId | GoogleTagConfigParamsWithMeasurementId | (GoogleTagMeasurementId | GoogleTagConfigParamsWithMeasurementId)[]`
 - **Default**: `undefined`
 
 #### `testMode`
+
 - **Type**: `boolean`
 - **Default**: `false`
 
