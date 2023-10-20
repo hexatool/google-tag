@@ -1,7 +1,7 @@
 import type {
+	GoogleAnalyticsConfig,
 	GoogleTagArguments,
 	GoogleTagConfigArguments,
-	GoogleTagConfigParams,
 	GoogleTagConsentAction,
 	GoogleTagConsentArguments,
 	GoogleTagConsentParams,
@@ -24,17 +24,16 @@ import type {
 	InitializeOptions,
 } from './types';
 
-interface GoogleTagConfigParamsWithMeasurementId extends GoogleTagConfigParams {
+interface GoogleTagConfigWithMeasurementId extends GoogleAnalyticsConfig {
 	measurementId: GoogleTagMeasurementId;
 }
 
 interface GoogleTagOptions {
-	allowAdPersonalizationSignals?: false;
 	layer?: string;
 	measurementId?:
 		| GoogleTagMeasurementId
-		| GoogleTagConfigParamsWithMeasurementId
-		| (GoogleTagMeasurementId | GoogleTagConfigParamsWithMeasurementId)[];
+		| GoogleTagConfigWithMeasurementId
+		| (GoogleTagMeasurementId | GoogleTagConfigWithMeasurementId)[];
 	testMode?: boolean;
 }
 
@@ -43,11 +42,10 @@ const DEFAULT_GOOGLE_TAG_URL = 'https://www.googletagmanager.com/gtag/js';
 const DEFAULT_GOOGLE_TAG_DATA_LAYER = 'dataLayer';
 
 class GoogleTag {
-	readonly #allowAdPersonalizationSignals?: false;
 	#dataLayer: string;
 	#initialize: boolean;
 	#isQueuing: boolean;
-	readonly #measurementId: Map<GoogleTagMeasurementId, GoogleTagConfigParams>;
+	readonly #measurementId: Map<GoogleTagMeasurementId, GoogleAnalyticsConfig>;
 	readonly #queueGtag: GoogleTagArguments[];
 	#testMode: boolean;
 
@@ -69,16 +67,8 @@ class GoogleTag {
 		if (typeof first === 'string') {
 			this.addMeasurementId(first, ...rest);
 		} else if (typeof first === 'object') {
-			const {
-				allowAdPersonalizationSignals,
-				measurementId,
-				testMode = false,
-				layer = DEFAULT_GOOGLE_TAG_DATA_LAYER,
-			} = first;
+			const { measurementId, testMode = false, layer = DEFAULT_GOOGLE_TAG_DATA_LAYER } = first;
 			this.#testMode = testMode;
-			if (allowAdPersonalizationSignals === false) {
-				this.#allowAdPersonalizationSignals = allowAdPersonalizationSignals;
-			}
 			this.#dataLayer = layer;
 			if (typeof measurementId === 'string') {
 				this.addMeasurementId(measurementId);
@@ -104,7 +94,7 @@ class GoogleTag {
 		return this.#queueGtag.length > 0;
 	}
 
-	addMeasurementId(...measurementId: (GoogleTagMeasurementId | GoogleTagConfigParamsWithMeasurementId)[]): void {
+	addMeasurementId(...measurementId: (GoogleTagMeasurementId | GoogleTagConfigWithMeasurementId)[]): void {
 		for (const id of measurementId) {
 			if (typeof id === 'string' && this.#assertMeasurementId(id)) {
 				this.#measurementId.set(id, {});
@@ -115,13 +105,13 @@ class GoogleTag {
 		}
 	}
 
-	config(params: GoogleTagConfigParams): void;
+	config(params: GoogleAnalyticsConfig): void;
 
-	config(measurementID: GoogleTagMeasurementId, params?: GoogleTagConfigParams): void;
+	config(measurementID: GoogleTagMeasurementId, params?: GoogleAnalyticsConfig): void;
 
 	config(
-		measurementIdOrParams: GoogleTagMeasurementId | GoogleTagConfigParams,
-		params?: GoogleTagConfigParams
+		measurementIdOrParams: GoogleTagMeasurementId | GoogleAnalyticsConfig,
+		params?: GoogleAnalyticsConfig
 	): void {
 		if (typeof measurementIdOrParams === 'string') {
 			if (params && Object.keys(params).length === 0) {
@@ -212,9 +202,6 @@ class GoogleTag {
 		}
 		this.#loadGoogleTagScript(defaultMeasurementId, googleTagUrl, nonce);
 		this.#initialize = true;
-		if (this.#allowAdPersonalizationSignals === false) {
-			this.gtag('set', 'allow_ad_personalization_signals', false);
-		}
 		this.gtag('js', new Date());
 		this.#measurementId.forEach((params, measurementId) => {
 			this.config(measurementId, params);

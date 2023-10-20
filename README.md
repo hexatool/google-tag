@@ -30,6 +30,8 @@
   - [`GoogleTag`](#googletag)
     - [`constructor()`](#constructor)
   - [`GoogleTagOptions`](#googletagoptions)
+  - [`GoogleTagMeasurementId`](#googletagmeasurementid)
+  - [`GoogleTagConfigWithMeasurementId`](#googletagconfigwithmeasurementid)
 
 ## Installation
 
@@ -119,7 +121,7 @@ const gtag = new GoogleTag("G-XXXXXXXXXX", "AW-XXXXXXXXXX");
 
 **With extra options**
 
-See documentation for [GoogleTagOptions](#googletagoptions).
+See documentation for [here](#googletagoptions).
 
 ```typescript
 const gtag = new GoogleTag({
@@ -131,6 +133,10 @@ const gtag = new GoogleTag({
 ```
 
 **With measurement id options**
+
+See documentation for [here](#googletagconfigwithmeasurementid).
+
+```typescript
 
 ```typescript
 const gtag = new GoogleTag({
@@ -155,17 +161,10 @@ const gtag = new GoogleTag({
 });
 ```
 
-### `GoogleTagMeasurementId`
-
-- **Type**: `string`
-- **Allowed values**: `G-XXXXXXXXXX | GT-XXXXXXXXXX | AW-XXXXXXXXXX | DC-XXXXXXXXXX`
-
 ### `GoogleTagOptions`
 
-#### `allowAdPersonalizationSignals`
-
-- **Type**: `false`
-- **Default**: `undefined`
+<details>
+  <summary>Expand properties</summary>
 
 #### `layer`
 
@@ -174,13 +173,89 @@ const gtag = new GoogleTag({
 
 #### `measurementId`
 
-- **Type**: `GoogleTagMeasurementId | GoogleTagConfigParamsWithMeasurementId | (GoogleTagMeasurementId | GoogleTagConfigParamsWithMeasurementId)[]`
+- **Type**: `GoogleTagMeasurementId | GoogleTagConfigWithMeasurementId | (GoogleTagMeasurementId | GoogleTagConfigWithMeasurementId)[]`
 - **Default**: `undefined`
 
 #### `testMode`
 
 - **Type**: `boolean`
 - **Default**: `false`
+
+</details>
+
+### `GoogleTagMeasurementId`
+
+- **Type**: `string`
+- **Allowed values**: `G-XXXXXXXXXX | GT-XXXXXXXXXX | AW-XXXXXXXXXX | DC-XXXXXXXXXX`
+
+### `GoogleTagConfigWithMeasurementId`
+
+See [full documentation](https://developers.google.com/analytics/devguides/collection/ga4/reference/config).
+
+<details>
+  <summary>Expand properties</summary>
+
+#### `allow_ad_personalization_signals`
+
+- **Type**: `boolean`
+- **Default**: `true`
+
+#### `allow_google_signals`
+
+- **Type**: `boolean`
+- **Default**: `true`
+
+#### `campaign_content`
+
+- **Type**: `string`
+- **Default**: `undefined`
+
+#### `campaign_id`
+
+- **Type**: `string`
+- **Default**: `undefined`
+
+#### `campaign_medium`
+
+- **Type**: `string`
+- **Default**: `undefined`
+
+#### `campaign_name`
+
+- **Type**: `string`
+- **Default**: `undefined`
+
+#### `campaign_source`
+
+- **Type**: `string`
+- **Default**: `undefined`
+
+#### `campaign_term`
+
+- **Type**: `string`
+- **Default**: `undefined`
+
+#### `client_id`
+
+- **Type**: `string`
+- **Default**: `A randomly generated value for each user.`
+
+#### `content_group`
+
+- **Type**: `string`
+- **Default**: `undefined`
+
+#### `cookie_domain`
+
+- **Type**: `string`
+- **Default**: `"auto"`
+
+#### `measurementId`
+
+- **Type**: `GoogleTagMeasurementId`
+- **Default**: `undefined`
+
+</details>
 
 ## Hexatool Code Quality Standards
 
