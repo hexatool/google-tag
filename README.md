@@ -30,6 +30,8 @@
   - [`GoogleTag`](#googletag)
     - [`constructor()`](#constructor)
   - [`GoogleTagOptions`](#googletagoptions)
+  - [`GoogleTagMeasurementId`](#googletagmeasurementid)
+  - [`GoogleTagConfigWithMeasurementId`](#googletagconfigwithmeasurementid)
 
 ## Installation
 
@@ -155,12 +157,10 @@ const gtag = new GoogleTag({
 });
 ```
 
-### `GoogleTagMeasurementId`
-
-- **Type**: `string`
-- **Allowed values**: `G-XXXXXXXXXX | GT-XXXXXXXXXX | AW-XXXXXXXXXX | DC-XXXXXXXXXX`
-
 ### `GoogleTagOptions`
+
+<details>
+  <summary>Expand properties</summary>
 
 #### `allowAdPersonalizationSignals`
 
@@ -182,8 +182,18 @@ const gtag = new GoogleTag({
 - **Type**: `boolean`
 - **Default**: `false`
 
+</details>
+
+### `GoogleTagMeasurementId`
+
+- **Type**: `string`
+- **Allowed values**: `G-XXXXXXXXXX | GT-XXXXXXXXXX | AW-XXXXXXXXXX | DC-XXXXXXXXXX`
+
 ### `GoogleTagConfigWithMeasurementId`
 
+
+<details>
+  <summary>Expand properties</summary>
 #### `allow_ad_personalization_signals`
 
 - **Type**: `boolean`
@@ -254,6 +264,8 @@ const gtag = new GoogleTag({
 
 - **Type**: `GoogleTagMeasurementId`
 - **Default**: `undefined`
+
+</details>
 
 ## Hexatool Code Quality Standards
 
