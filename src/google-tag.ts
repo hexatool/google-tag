@@ -1,7 +1,7 @@
 import type {
+	GoogleAnalyticsConfig,
 	GoogleTagArguments,
 	GoogleTagConfigArguments,
-	GoogleTagConfigParams,
 	GoogleTagConsentAction,
 	GoogleTagConsentArguments,
 	GoogleTagConsentParams,
@@ -24,7 +24,7 @@ import type {
 	InitializeOptions,
 } from './types';
 
-interface GoogleTagConfigParamsWithMeasurementId extends GoogleTagConfigParams {
+interface GoogleTagConfigWithMeasurementId extends GoogleAnalyticsConfig {
 	measurementId: GoogleTagMeasurementId;
 }
 
@@ -33,8 +33,8 @@ interface GoogleTagOptions {
 	layer?: string;
 	measurementId?:
 		| GoogleTagMeasurementId
-		| GoogleTagConfigParamsWithMeasurementId
-		| (GoogleTagMeasurementId | GoogleTagConfigParamsWithMeasurementId)[];
+		| GoogleTagConfigWithMeasurementId
+		| (GoogleTagMeasurementId | GoogleTagConfigWithMeasurementId)[];
 	testMode?: boolean;
 }
 
@@ -47,7 +47,7 @@ class GoogleTag {
 	#dataLayer: string;
 	#initialize: boolean;
 	#isQueuing: boolean;
-	readonly #measurementId: Map<GoogleTagMeasurementId, GoogleTagConfigParams>;
+	readonly #measurementId: Map<GoogleTagMeasurementId, GoogleAnalyticsConfig>;
 	readonly #queueGtag: GoogleTagArguments[];
 	#testMode: boolean;
 
@@ -104,7 +104,7 @@ class GoogleTag {
 		return this.#queueGtag.length > 0;
 	}
 
-	addMeasurementId(...measurementId: (GoogleTagMeasurementId | GoogleTagConfigParamsWithMeasurementId)[]): void {
+	addMeasurementId(...measurementId: (GoogleTagMeasurementId | GoogleTagConfigWithMeasurementId)[]): void {
 		for (const id of measurementId) {
 			if (typeof id === 'string' && this.#assertMeasurementId(id)) {
 				this.#measurementId.set(id, {});
@@ -115,13 +115,13 @@ class GoogleTag {
 		}
 	}
 
-	config(params: GoogleTagConfigParams): void;
+	config(params: GoogleAnalyticsConfig): void;
 
-	config(measurementID: GoogleTagMeasurementId, params?: GoogleTagConfigParams): void;
+	config(measurementID: GoogleTagMeasurementId, params?: GoogleAnalyticsConfig): void;
 
 	config(
-		measurementIdOrParams: GoogleTagMeasurementId | GoogleTagConfigParams,
-		params?: GoogleTagConfigParams
+		measurementIdOrParams: GoogleTagMeasurementId | GoogleAnalyticsConfig,
+		params?: GoogleAnalyticsConfig
 	): void {
 		if (typeof measurementIdOrParams === 'string') {
 			if (params && Object.keys(params).length === 0) {

@@ -1,5 +1,5 @@
-import type { GoogleTagCommonParams } from '../params';
+import type { GoogleTagSetAndEventParams } from '../params';
 
-export interface GoogleTagEventCommonParams extends GoogleTagCommonParams {
+export interface GoogleTagEventCommonParams extends GoogleTagSetAndEventParams {
 	non_interaction?: boolean;
 }

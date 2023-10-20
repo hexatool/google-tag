@@ -1,7 +1,7 @@
 import type { GoogleTagMeasurementId } from './measurement-id';
-import type { GoogleTagCommonParams, GoogleTagParamsPrimitives } from './params';
+import type { GoogleTagParamsPrimitives, GoogleTagSetAndEventParams } from './params';
 
-interface GoogleTagSetParams extends GoogleTagCommonParams {
+interface GoogleTagSetParams extends GoogleTagSetAndEventParams {
 	allow_ad_personalization_signals?: boolean;
 	allow_google_signals?: boolean;
 	restricted_data_processing?: boolean;

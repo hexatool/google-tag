@@ -10,7 +10,7 @@ type GoogleTagParamsWithCallback = Record<
 	GoogleTagParamsPrimitivesWithCallback | GoogleTagParamsPrimitivesWithCallback[]
 >;
 
-interface GoogleTagCommonParams extends GoogleTagParamsWithCallback {
+interface GoogleTagSetAndEventParams extends GoogleTagParamsWithCallback {
 	event_callback?: () => void;
 	event_timeout?: number;
 	groups?: string | string[];
@@ -18,9 +18,9 @@ interface GoogleTagCommonParams extends GoogleTagParamsWithCallback {
 }
 
 export type {
-	GoogleTagCommonParams,
 	GoogleTagParams,
 	GoogleTagParamsPrimitives,
 	GoogleTagParamsPrimitivesWithCallback,
 	GoogleTagParamsWithCallback,
+	GoogleTagSetAndEventParams,
 };
