@@ -53,7 +53,7 @@ pnpm add @hexatool/google-tag
 
 ## How to use
 
-See full documentation [here](./wiki).
+See full documentation [here](https://github.com/hexatool/google-tag/wiki).
 
 ```typescript
 import { GoogleTag } from "@hexatool/google-tag";
