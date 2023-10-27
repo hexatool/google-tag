@@ -14,13 +14,19 @@ interface GoogleAnalyticsConfig {
 	content_group?: string;
 	cookie_domain?: string;
 	cookie_expires?: number;
+	cookie_flags?: string;
+	cookie_path?: string;
 	cookie_prefix?: string;
-	cookie_update?: false;
+	cookie_update?: boolean;
+	language?: string;
 	page_location?: string;
+	page_referrer?: string;
 	page_title?: string;
 	restricted_data_processing?: boolean;
+	screen_resolution?: string;
 	send_page_view?: boolean;
 	user_id?: string;
+	user_properties?: Record<string, string>;
 }
 
 type GoogleTagConfigArguments = GoogleTagArgumentsTyped<'config', GoogleTagMeasurementId, GoogleAnalyticsConfig>;
