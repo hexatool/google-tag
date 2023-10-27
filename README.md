@@ -248,6 +248,67 @@ See [full documentation](https://developers.google.com/analytics/devguides/colle
 - **Type**: `string`
 - **Default**: `"auto"`
 
+#### `cookie_expires`
+
+- **Type**: `number`
+- **Default**: `"63072000"`
+
+#### `cookie_flags`
+
+- **Type**: `string`
+
+#### `cookie_path`
+
+- **Type**: `string`
+- **Default**: `"/"`
+
+#### `cookie_prefix`
+
+- **Type**: `string`
+
+#### `cookie_update`
+
+- **Type**: `boolean`
+- **Default**: `true`
+
+#### `language`
+
+- **Type**: `string`
+- **Default**: `navigator.language`
+
+#### `page_location`
+
+- **Type**: `string`
+- **Default**: `document.location`
+
+#### `page_referrer`
+
+- **Type**: `string`
+- **Default**: `document.referrer`
+
+#### `page_title`
+
+- **Type**: `string`
+- **Default**: `document.title`
+
+#### `screen_resolution`
+
+- **Type**: `string`
+- **Default**: `window.screen`
+
+#### `send_page_view`
+
+- **Type**: `boolean`
+- **Default**: `true`
+
+#### `user_id`
+
+- **Type**: `string`
+
+#### `user_properties`
+
+- **Type**: `object`
+
 #### `measurementId`
 
 - **Type**: `GoogleTagMeasurementId`
