@@ -68,6 +68,8 @@ gtag.event("page_view", {
   page_title: "Home",
   page_location: "https://example.com",
 });
+
+gtag.destroy();
 ```
 
 **Using with React**
