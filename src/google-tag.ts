@@ -105,7 +105,7 @@ class GoogleTag {
 		}
 	}
 
-	config(params: GoogleAnalyticsConfig): void;
+	config(params?: GoogleAnalyticsConfig): void;
 
 	config(measurementID: GoogleTagMeasurementId, params?: GoogleAnalyticsConfig): void;
 
