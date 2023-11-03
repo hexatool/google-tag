@@ -110,7 +110,7 @@ class GoogleTag {
 	config(measurementID: GoogleTagMeasurementId, params?: GoogleAnalyticsConfig): void;
 
 	config(
-		measurementIdOrParams: GoogleTagMeasurementId | GoogleAnalyticsConfig,
+		measurementIdOrParams: GoogleTagMeasurementId | GoogleAnalyticsConfig = {},
 		params?: GoogleAnalyticsConfig
 	): void {
 		if (typeof measurementIdOrParams === 'string') {
