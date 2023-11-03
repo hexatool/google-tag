@@ -26,12 +26,6 @@
 
 - [Installation](#installation)
 - [How to use](#how-to-use)
-- [API](#api)
-  - [`GoogleTag`](#googletag)
-    - [`constructor()`](#constructor)
-  - [`GoogleTagOptions`](#googletagoptions)
-  - [`GoogleTagMeasurementId`](#googletagmeasurementid)
-  - [`GoogleTagConfigWithMeasurementId`](#googletagconfigwithmeasurementid)
 
 ## Installation
 
@@ -59,6 +53,8 @@ pnpm add @hexatool/google-tag
 
 ## How to use
 
+See full documentation [here](https://github.com/hexatool/google-tag/wiki).
+
 ```typescript
 import { GoogleTag } from "@hexatool/google-tag";
 
@@ -72,6 +68,8 @@ gtag.event("page_view", {
   page_title: "Home",
   page_location: "https://example.com",
 });
+
+gtag.destroy();
 ```
 
 **Using with React**
@@ -102,160 +100,6 @@ const App = () => {
   );
 };
 ```
-
-## API
-
-### `GoogleTag`
-
-Main class to interact with Google Tag.
-
-#### `constructor()`
-
-Creates a new instance of GoogleTag.
-
-**With only measurement ids**
-
-```typescript
-const gtag = new GoogleTag("G-XXXXXXXXXX", "AW-XXXXXXXXXX");
-```
-
-**With extra options**
-
-See documentation for [here](#googletagoptions).
-
-```typescript
-const gtag = new GoogleTag({
-  allowAdPersonalizationSignals: false,
-  layer: "customLayer",
-  measurementId: "G-XXXXXXXXXX",
-  testMode: false,
-});
-```
-
-**With measurement id options**
-
-See documentation for [here](#googletagconfigwithmeasurementid).
-
-````typescript
-
-```typescript
-const gtag = new GoogleTag({
-  measurementId: {
-    cookie_prefix: "my_prefix",
-    measurementId: "G-XXXXXXXXXX",
-  },
-});
-````
-
-**With multiple measurement ids**
-
-```typescript
-const gtag = new GoogleTag({
-  measurementId: [
-    "AW-XXXXXXXXXX",
-    {
-      cookie_prefix: "my_prefix",
-      measurementId: "G-XXXXXXXXXX",
-    },
-  ],
-});
-```
-
-### `GoogleTagOptions`
-
-<details>
-  <summary>Expand properties</summary>
-
-#### `layer`
-
-- **Type**: `string`
-- **Default**: `"dataLayer"`
-
-#### `measurementId`
-
-- **Type**: `GoogleTagMeasurementId | GoogleTagConfigWithMeasurementId | (GoogleTagMeasurementId | GoogleTagConfigWithMeasurementId)[]`
-- **Default**: `undefined`
-
-#### `testMode`
-
-- **Type**: `boolean`
-- **Default**: `false`
-
-</details>
-
-### `GoogleTagMeasurementId`
-
-- **Type**: `string`
-- **Allowed values**: `G-XXXXXXXXXX | GT-XXXXXXXXXX | AW-XXXXXXXXXX | DC-XXXXXXXXXX`
-
-### `GoogleTagConfigWithMeasurementId`
-
-See [full documentation](https://developers.google.com/analytics/devguides/collection/ga4/reference/config).
-
-<details>
-  <summary>Expand properties</summary>
-
-#### `allow_ad_personalization_signals`
-
-- **Type**: `boolean`
-- **Default**: `true`
-
-#### `allow_google_signals`
-
-- **Type**: `boolean`
-- **Default**: `true`
-
-#### `campaign_content`
-
-- **Type**: `string`
-- **Default**: `undefined`
-
-#### `campaign_id`
-
-- **Type**: `string`
-- **Default**: `undefined`
-
-#### `campaign_medium`
-
-- **Type**: `string`
-- **Default**: `undefined`
-
-#### `campaign_name`
-
-- **Type**: `string`
-- **Default**: `undefined`
-
-#### `campaign_source`
-
-- **Type**: `string`
-- **Default**: `undefined`
-
-#### `campaign_term`
-
-- **Type**: `string`
-- **Default**: `undefined`
-
-#### `client_id`
-
-- **Type**: `string`
-- **Default**: `A randomly generated value for each user.`
-
-#### `content_group`
-
-- **Type**: `string`
-- **Default**: `undefined`
-
-#### `cookie_domain`
-
-- **Type**: `string`
-- **Default**: `"auto"`
-
-#### `measurementId`
-
-- **Type**: `GoogleTagMeasurementId`
-- **Default**: `undefined`
-
-</details>
 
 ## Hexatool Code Quality Standards
 

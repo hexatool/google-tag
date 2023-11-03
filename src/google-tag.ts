@@ -42,7 +42,7 @@ const DEFAULT_GOOGLE_TAG_URL = 'https://www.googletagmanager.com/gtag/js';
 const DEFAULT_GOOGLE_TAG_DATA_LAYER = 'dataLayer';
 
 class GoogleTag {
-	#dataLayer: string;
+	readonly #dataLayer: string;
 	#initialize: boolean;
 	#isQueuing: boolean;
 	readonly #measurementId: Map<GoogleTagMeasurementId, GoogleAnalyticsConfig>;
@@ -110,7 +110,7 @@ class GoogleTag {
 	config(measurementID: GoogleTagMeasurementId, params?: GoogleAnalyticsConfig): void;
 
 	config(
-		measurementIdOrParams: GoogleTagMeasurementId | GoogleAnalyticsConfig,
+		measurementIdOrParams: GoogleTagMeasurementId | GoogleAnalyticsConfig = {},
 		params?: GoogleAnalyticsConfig
 	): void {
 		if (typeof measurementIdOrParams === 'string') {
