@@ -5,6 +5,7 @@
     "@hexatool/google-tag": "0.0.0"
   },
   "changesets": [
+    "flat-students-wink",
     "plenty-meals-tease",
     "tender-bottles-behave"
   ]

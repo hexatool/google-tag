@@ -1,5 +1,11 @@
 # @magnus-strategy/react-ga4
 
+## 1.0.0-beta.2
+
+### Patch Changes
+
+- cfc799e: Makes param `GoogleAnalyticsConfig` of `config()`method optional.
+
 ## 1.0.0-beta.1
 
 ### Patch Changes
